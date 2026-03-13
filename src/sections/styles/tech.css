@@ -1,0 +1,393 @@
+:root {
+  --tech-bg: #0d1117;
+  --tech-panel: #11161d;
+  --tech-panel-2: #161c24;
+  --tech-border: #262f3a;
+  --tech-border-soft: #202833;
+
+  --tech-text: #d8dee9;
+  --tech-text-soft: #b4becb;
+  --tech-text-muted: #7f8b99;
+
+  --tech-folder: #cdd9e5;
+  --tech-file: #aeb8c5;
+  --tech-hover: #1c2430;
+  --tech-hover-2: #202a36;
+
+  --tech-accent: #8fa3b8;
+  --tech-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+  --tech-radius: 10px;
+  --tech-radius-sm: 8px;
+}
+
+/* =========================
+   TREE
+========================= */
+
+.tech-tree {
+  position: relative;
+  padding: 1rem;
+  border: 1px solid var(--tech-border);
+  border-radius: var(--tech-radius);
+  background: linear-gradient(180deg, var(--tech-panel), #0f141a);
+  box-shadow: var(--tech-shadow);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+}
+
+.tech-folder {
+  position: relative;
+}
+
+.tech-folder-name {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 36px;
+  padding: 0.45rem 0.65rem;
+  margin: 0.08rem 0;
+  border-radius: var(--tech-radius-sm);
+  cursor: pointer;
+  user-select: none;
+
+  color: var(--tech-folder);
+  font-size: 0.92rem;
+  font-weight: 500;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.tech-folder-name:hover {
+  background: var(--tech-hover);
+  color: #f1f5f9;
+}
+
+.tech-folder-name::before {
+  content: "▸";
+  width: 14px;
+  color: var(--tech-text-muted);
+  font-size: 0.85rem;
+}
+
+.tech-folder-name[aria-expanded="true"]::before {
+  content: "▾";
+}
+
+.tech-folder-name::after {
+  content: "/";
+  margin-left: auto;
+  color: #5f6c7b;
+}
+
+.tech-children {
+  margin-left: 1rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--tech-border-soft);
+}
+
+/* =========================
+   FILE
+========================= */
+
+.tech-file {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 34px;
+  padding: 0.42rem 0.65rem;
+  margin: 0.08rem 0;
+  border-radius: var(--tech-radius-sm);
+  cursor: pointer;
+  user-select: none;
+
+  color: var(--tech-file);
+  font-size: 0.9rem;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.tech-file:hover {
+  background: var(--tech-hover-2);
+  color: #f5f7fa;
+}
+
+.tech-file::before {
+  content: "·";
+  width: 14px;
+  color: #697586;
+  text-align: center;
+}
+
+/* =========================
+   MODAL OVERLAY
+========================= */
+
+.tech-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(4, 7, 11, 0.72);
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.tech-modal {
+  width: min(760px, 100%);
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  border: 1px solid var(--tech-border);
+  border-radius: 12px;
+  background: #0f141a;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.42),
+    0 8px 20px rgba(0, 0, 0, 0.22);
+}
+
+/* =========================
+   MODAL HEADER
+========================= */
+
+.tech-modal-header {
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--tech-border);
+  background: linear-gradient(180deg, #171d25, #131921);
+
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.84rem;
+  color: var(--tech-text);
+}
+
+.tech-modal-header::before {
+  content: "● ● ●";
+  margin-right: 0.9rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12rem;
+  color: #6f7d8e;
+}
+
+.tech-modal-body {
+  margin: 0;
+  padding: 1rem 1.05rem 1.15rem;
+  overflow: auto;
+
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: var(--tech-text-soft);
+  white-space: pre-wrap;
+  word-break: break-word;
+
+  scrollbar-width: thin;
+  scrollbar-color: #374252 transparent;
+}
+
+.tech-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tech-modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tech-modal-body::-webkit-scrollbar-thumb {
+  background: #374252;
+  border-radius: 999px;
+}
+
+.tech-modal-body::before {
+  content: "$ cat selected_file";
+  display: block;
+  margin-bottom: 0.9rem;
+  color: var(--tech-accent);
+  font-size: 0.76rem;
+}
+
+.tech-file-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-right: 6px;
+  opacity: 0.9;
+}
+
+.tech-folder-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-right: 6px;
+  opacity: 0.95;
+}
+
+.tech-modal-image {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 20px 0;
+}
+
+.tech-modal-image img {
+  height: 60px;
+  object-fit: contain;
+}
+
+.tech-tree {
+  position: relative;
+  padding: 1rem;
+  border: 1px solid var(--tech-border);
+  border-radius: var(--tech-radius);
+  background: linear-gradient(180deg, var(--tech-panel), #0f141a);
+  box-shadow: var(--tech-shadow);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #374252 transparent;
+}
+
+.tech-tree::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tech-tree::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tech-tree::-webkit-scrollbar-thumb {
+  background: #374252;
+  border-radius: 999px;
+}
+
+.tech-folder-name,
+.tech-file {
+  width: 100%;
+  min-width: 0;
+}
+
+.tech-folder-name span,
+.tech-file span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tech-modal {
+  width: min(760px, 100%);
+  max-width: 100%;
+  max-height: 82vh;
+}
+
+.tech-modal-body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* =========================
+   TECH SECTION MOBILE FIX
+========================= */
+
+@media (max-width: 768px) {
+  .section-wrap {
+    padding: 4.2rem 1rem 2rem;
+    justify-content: flex-start;
+  }
+
+  #tech.section-wrap,
+  .tech-section {
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .s-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.8rem;
+  }
+
+  .s-label::before {
+    width: 16px;
+  }
+
+  .s-title {
+    font-size: clamp(2.4rem, 11vw, 4rem);
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.9rem;
+    max-width: 8ch;
+  }
+
+  .s-sub {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    max-width: 32ch;
+  }
+
+  .tech-tree-shell {
+    margin-top: 1.4rem;
+    max-width: 100%;
+    max-height: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .section-wrap {
+    padding: 4rem 0.7rem 1.4rem;
+  }
+
+  .s-label {
+    font-size: 0.55rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .s-title {
+    font-size: clamp(1.9rem, 9vw, 3rem);
+    line-height: 0.95;
+    margin-bottom: 0.7rem;
+    max-width: 7ch;
+  }
+
+  .s-sub {
+    font-size: 0.74rem;
+    line-height: 1.5;
+    max-width: 28ch;
+  }
+
+  .tech-tree-shell {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section-wrap {
+    padding: 3.6rem 0.5rem 1.1rem;
+  }
+
+  .s-title {
+    font-size: clamp(1.6rem, 8vw, 2.3rem);
+    line-height: 0.98;
+    margin-bottom: 0.55rem;
+    max-width: 6.5ch;
+  }
+
+  .s-sub {
+    font-size: 0.68rem;
+    max-width: 24ch;
+  }
+
+  .tech-tree-shell {
+    margin-top: 0.8rem;
+  }
+}

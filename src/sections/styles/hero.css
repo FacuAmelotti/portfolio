@@ -1,0 +1,455 @@
+/* ── CANVAS — full bleed fix ────────────────────────────── */
+.hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;        /* removes inline gap */
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ── CONTENT LAYER ──────────────────────────────────────── */
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── NAME — terminal / old school mono ─────────────────── */
+.hero-name {
+  font-family: 'Share Tech Mono', 'JetBrains Mono', monospace !important;
+  font-size: clamp(2.8rem, 7.5vw, 7rem) !important;
+  font-weight: 400 !important;          /* mono fonts look better regular */
+  letter-spacing: -0.01em !important;
+  line-height: 1.05 !important;
+  color: #f0f0f0;
+  text-shadow:
+    0 0 40px rgba(255,255,255,0.06),
+    0 0 2px  rgba(255,255,255,0.3);
+  margin-bottom: 1rem !important;
+}
+
+/* Second line — slightly dimmer, terminal green replaced by light gray */
+.hero-name .lime {
+  color: #c8c8c8 !important;
+  text-shadow:
+    0 0 30px rgba(200,200,200,0.1),
+    0 0 1px  rgba(255,255,255,0.2);
+}
+
+/* ── CARET ──────────────────────────────────────────────── */
+.tw-caret {
+  display: inline-block;
+  width: 3px;
+  height: 0.8em;
+  background: #e0e0e0;
+  margin-left: 4px;
+  vertical-align: baseline;
+  position: relative;
+  top: 0.1em;
+  border-radius: 1px;
+  animation: caretBlink 1s step-end infinite;
+  box-shadow: 0 0 6px rgba(224,224,224,0.5);
+}
+
+@keyframes caretBlink {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0; }
+}
+
+.tw-caret.done {
+  animation: caretFade 0.4s var(--ease-expo) 1s forwards;
+}
+
+@keyframes caretFade {
+  to { opacity: 0; width: 0; margin-left: 0; }
+}
+
+/* ── STAGGERED REVEAL ───────────────────────────────────── */
+.hero-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s var(--ease-expo), transform 0.6s var(--ease-expo);
+}
+
+.hero-reveal.visible      { opacity: 1; transform: translateY(0); }
+.hero-reveal-1            { transition-delay: 0.05s; }
+.hero-reveal-2            { transition-delay: 0.18s; }
+.hero-reveal-3            { transition-delay: 0.32s; }
+
+/* ── STATUS BADGE ───────────────────────────────────────── */
+.hero-status {
+  border-color: rgba(255,255,255,0.1) !important;
+  background: rgba(12,12,12,0.8) !important;
+  animation: statusIn 0.5s var(--ease-expo) both;
+}
+
+@keyframes statusIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.status-dot {
+  background: #d0d0d0 !important;
+  box-shadow: none !important;
+  animation: pulseMono 2.4s ease-in-out infinite !important;
+}
+
+@keyframes pulseMono {
+  0%,100% { box-shadow: 0 0 0 0 rgba(200,200,200,0.5); }
+  50%     { box-shadow: 0 0 0 5px rgba(200,200,200,0); }
+}
+
+/* ── ROLE LINE ──────────────────────────────────────────── */
+.hero-role {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: clamp(0.78rem, 1vw, 0.92rem) !important;
+  font-style: normal !important;
+  letter-spacing: 0.06em !important;
+  color: #555 !important;
+}
+
+/* ── BUTTONS ────────────────────────────────────────────── */
+.btn-primary {
+  background: #e8e8e8 !important;
+  color: #020202 !important;
+  border-color: #e8e8e8 !important;
+}
+
+.btn-primary:hover {
+  background: #ffffff !important;
+  box-shadow: 0 0 28px rgba(255,255,255,0.15), 0 8px 22px rgba(0,0,0,0.4) !important;
+}
+
+/* ── HERO ORBS — grayscale ──────────────────────────────── */
+.hero-orb-1 {
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%) !important;
+}
+
+.hero-orb-2 {
+  background: radial-gradient(circle, rgba(180,180,180,0.05) 0%, transparent 70%) !important;
+}
+
+/* ── BUTTON STAGGER ENTRANCE ────────────────────────────── */
+.hero-actions .btn {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: btnIn 0.45s var(--ease-expo) forwards;
+}
+
+.hero-actions .btn:nth-child(1) { animation-delay: 0.08s; }
+.hero-actions .btn:nth-child(2) { animation-delay: 0.18s; }
+.hero-actions .btn:nth-child(3) { animation-delay: 0.28s; }
+
+@keyframes btnIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PROGRESS BAR — grayscale ───────────────────────────── */
+.progress-fill {
+  background: linear-gradient(90deg, #e0e0e0, #888) !important;
+  box-shadow: none !important;
+}
+
+/* ── DOT NAV — grayscale ────────────────────────────────── */
+.dot.active {
+  background: #e0e0e0 !important;
+  box-shadow: 0 0 6px rgba(220,220,220,0.3) !important;
+}
+
+/* ── NAV LOGO & LINKS ───────────────────────────────────── */
+.nav-logo { color: #c0c0c0 !important; }
+.nav-links button.active { color: #e8e8e8 !important; }
+.nav-links button.active::after { background: #e8e8e8 !important; }
+.nav-links button:hover::after  { background: #e8e8e8 !important; }
+
+/* ── COUNTER ────────────────────────────────────────────── */
+.counter-current { color: #aaa !important; }
+
+/* ── CHIP HOVERS ────────────────────────────────────────── */
+.chip:hover {
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #f0f0f0 !important;
+  background: rgba(255,255,255,0.05) !important;
+}
+
+/* ── HERO ROOT — full viewport, no constraints ──────────── */
+.hero-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--void);
+}
+
+/* Canvas: absolute, covers everything edge to edge */
+.hero-canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* Orbs also full-viewport positioned */
+.hero-root .hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(90px);
+  z-index: 0;
+}
+
+.hero-root .hero-bg-line {
+  position: absolute;
+  top: 0; bottom: 0;
+  right: 10%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--rim) 30%, var(--rim-hi) 60%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Content sits above canvas */
+.hero-content-wrap {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ── THE VOID: BACKEND ENGINE AESTHETIC ────────────────── */
+:root {
+  --backend-bg: #050505;
+  --terminal-green: #00ff9d; /* Accento neón sutil para "System Ready" */
+  --system-gray: #1a1a1a;
+  --code-dim: #666;
+  --flux-glow: rgba(0, 255, 157, 0.15);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.hero-root {
+  background: radial-gradient(circle at center, #0a0a0a 0%, #050505 100%);
+  perspective: 1000px;
+}
+
+/* ── SCANLINE & GRID (The "Server Room" Feel) ─────────── */
+.hero-root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 4px, 3px 100%;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* ── CANVAS: DEEP SPACE MODULATION ─────────────────────── */
+.hero-canvas {
+  position: absolute;
+  filter: contrast(120%) brightness(80%) grayscale(1);
+  mix-blend-mode: screen;
+  opacity: 0.25 !important;
+  transition: opacity 1s var(--ease-out-expo);
+}
+
+/* ── NAME: ARCHITECTURAL MONO ─────────────────────────── */
+.hero-name {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  text-transform: uppercase;
+  letter-spacing: -0.04em !important;
+  filter: drop-shadow(0 0 25px rgba(255,255,255,0.1));
+}
+
+.hero-name .lime {
+  color: var(--terminal-green) !important;
+  text-shadow: 0 0 15px var(--flux-glow);
+  position: relative;
+}
+
+/* ── INTERACTIVE CARET: SYSTEM HEARTBEAT ──────────────── */
+.tw-caret {
+  width: 12px;
+  height: 1em;
+  background: var(--terminal-green);
+  box-shadow: 0 0 12px var(--terminal-green);
+  animation: caretPulse 0.8s steps(2, start) infinite;
+}
+
+@keyframes caretPulse {
+  to { visibility: hidden; }
+}
+
+/* ── STATUS BADGE: LOW-LATENCY READY ───────────────────── */
+.hero-status {
+  background: rgba(0, 255, 157, 0.03) !important;
+  border: 1px solid rgba(0, 255, 157, 0.2) !important;
+  padding: 6px 12px !important;
+  backdrop-filter: blur(8px);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  font-size: 0.7rem !important;
+}
+
+.status-dot {
+  background: var(--terminal-green) !important;
+  box-shadow: 0 0 10px var(--terminal-green) !important;
+}
+
+/* ── BUTTONS: HARDWARE INTERFACE ──────────────────────── */
+.btn-primary {
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid #333 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s var(--ease-out-expo) !important;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: 0.5s;
+}
+
+.btn-primary:hover {
+  border-color: var(--terminal-green) !important;
+  color: var(--terminal-green) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 255, 157, 0.1) !important;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+/* ── PROGRESS: DATA STREAM ────────────────────────────── */
+.progress-fill {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--terminal-green),
+    var(--terminal-green) 10px,
+    #00cc7e 10px,
+    #00cc7e 20px
+  ) !important;
+  height: 100%;
+  position: relative;
+}
+
+/* ── CHIPS: NODE MODULES ──────────────────────────────── */
+.chip {
+  background: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  font-family: 'JetBrains Mono', monospace;
+  transition: 0.2s ease;
+}
+
+.chip:hover {
+  background: #fff !important;
+  color: #000 !important;
+  transform: scale(1.05);
+}
+
+/* ── BACKGROUND ORBS: KUBERNETES NODES ────────────────── */
+.hero-orb-1 {
+  background: radial-gradient(circle, rgba(0, 255, 157, 0.05) 0%, transparent 70%) !important;
+  width: 600px; height: 600px;
+}
+
+/* ── REVEAL ANIMATION: SEQUENTIAL BOOT ────────────────── */
+.hero-reveal {
+  filter: blur(10px);
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.hero-reveal.visible {
+  filter: blur(0);
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo),
+    filter 0.8s var(--ease-out-expo);
+}
+
+/* ── GLITCH EFFECT ON HOVER (Optional for extra spice) ── */
+.hero-name:hover {
+  animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* ── GLOBAL CLICK: REFINED SYSTEM IMPACT ────────────────── */
+.system-click-flash {
+  position: relative;
+}
+
+/* El pseudo-elemento crea el efecto de "Lente" o Distorsión */
+.system-click-flash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--click-x, 50%) var(--click-y, 50%),
+    rgba(56, 56, 56, 0.15) 0%,
+    transparent 50%
+  );
+  z-index: 20;
+  pointer-events: none;
+  animation: digitalImpact 0.4s var(--ease-out-expo) forwards;
+}
+
+@keyframes digitalImpact {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+    filter: brightness(2) contrast(2) hue-rotate(90deg);
+  }
+  10% {
+    opacity: 1;
+    filter: brightness(1.5) contrast(1.5) hue-rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.5);
+    filter: brightness(1) contrast(1);
+  }
+}
+
+/* Efecto de sacudida rápida (Shaking) solo en el impacto */
+.system-click-flash {
+  animation: kernelShake 0.15s linear 1;
+}
+
+@keyframes kernelShake {
+  0% { transform: translate(0); }
+  25% { transform: translate(-2px, 1px); }
+  50% { transform: translate(2px, -1px); }
+  75% { transform: translate(-1px, -1px); }
+  100% { transform: translate(0); }
+}
+
