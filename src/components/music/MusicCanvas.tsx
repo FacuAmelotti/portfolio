@@ -82,4 +82,9 @@ export default function MusicCanvas({ active, accent = "#ffb43c" }: MusicCanvasP
     }
   }, [active, accent])
 
-  return <canvas ref={canvasRef} className="musi
+return (
+  <canvas
+    ref={canvasRef}
+    className="music-canvas"
+  />
+)
