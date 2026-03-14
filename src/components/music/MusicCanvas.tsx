@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react"
 import type { MusicCanvasProps } from "./music.types"
 import { hexToRgba } from "./music.utils"
@@ -82,9 +81,10 @@ export default function MusicCanvas({ active, accent = "#ffb43c" }: MusicCanvasP
     }
   }, [active, accent])
 
-return (
-  <canvas
-    ref={canvasRef}
-    className="music-canvas"
-  />
-)
+  return (
+    <canvas
+      ref={canvasRef}
+      className="music-canvas"
+    />
+  )
+}
