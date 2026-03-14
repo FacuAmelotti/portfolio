@@ -9,15 +9,13 @@ export default function Music({ active }: { active: boolean }) {
   const audioContextRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
-  const frequencyDataRef = useRef<Uint8Array | null>(null)
+  const frequencyDataRef = useRef<Uint8Array<ArrayBuffer> | null>(null)
   const beatLevelRef = useRef(0)
 
   const [currentSongIndex, setCurrentSongIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
 
   const currentSong = songs[currentSongIndex]
-
-const [playlistOpen, setPlaylistOpen] = useState(false)
 
   useEffect(() => {
     if (!currentSong.audio) return
@@ -67,7 +65,8 @@ const [playlistOpen, setPlaylistOpen] = useState(false)
 
           analyserRef.current = analyser
           sourceRef.current = source
-          frequencyDataRef.current = new Uint8Array(analyser.frequencyBinCount)
+          frequencyDataRef.current = new Uint8Array(analyser.frequencyBinCount) as Uint8Array<ArrayBuffer>
+            //frequencyDataRef.current = new Uint8Array(analyser.frequencyBinCount) as Uint8Array<ArrayBuffer>
         }
       } catch {
         analyserRef.current = null
@@ -322,9 +321,7 @@ const [playlistOpen, setPlaylistOpen] = useState(false)
 
         <div className="music-content">
           <div className="music-info">
-            <div className="music-label">
-              {currentSong.label ?? "FaK1NG"}
-            </div>
+            <div className="music-label">FaK1NG</div>
 
             <h2 className="music-title">{currentSong.title}</h2>
 
