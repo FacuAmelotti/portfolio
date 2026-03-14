@@ -1,27 +1,45 @@
 const projects = [
   {
-    title: "Valdoria Online",
+    title: "Valdoria",
     description:
-      "Browser MMORPG with battle system, inventory, skills and matchmaking.",
-    tech: ["Java", "Spring Boot", "React", "Docker"]
-  },
-  {
-    title: "Bricks APIs",
-    description:
-      "Fintech microservices ecosystem including User API, Fraud API and Wallet.",
-    tech: ["Java", "Spring", "OAuth", "Docker"]
+      "Plataforma de videojuego online con cuentas, personajes, progresión y sistemas de combate. Backend en Java/Spring y frontend moderno.",
+    tech: ["Java", "Spring Boot", "React", "TypeScript", "MySQL"]
   },
   {
     title: "Roomverse",
     description:
-      "Interactive game world simulation and digital universe platform.",
-    tech: ["Unity", "C#", "Web"]
+      "Simulación de mundo interactivo con mapas, entidades y progresión modular desarrollada en Unity.",
+    tech: ["Unity", "C#"]
+  },
+  {
+    title: "Colegio de Ingenieros",
+    description:
+      "Sistema de gestión para ingenieros y empresas con autenticación, bolsa laboral y modelo de datos híbrido.",
+    tech: ["Vue.js", "Node.js", "MySQL", "MongoDB", "Docker"]
   },
   {
     title: "GitLab Script Generator",
     description:
-      "Automation tool for generating CI/CD scripts.",
-    tech: ["NodeJS", "Automation"]
+      "Herramienta web para generar scripts de configuración de permisos y ramas protegidas en GitLab.",
+    tech: ["HTML", "CSS", "JavaScript", "GitLab"]
+  },
+  {
+    title: "Space Survival",
+    description:
+      "Prototipo de videojuego survival desarrollado en Unity y publicado en itch.io.",
+    tech: ["Unity", "C#", "HTML5"]
+  },
+  {
+    title: "ChatBot Assistant",
+    description:
+      "Asistente conversacional de escritorio con motor de diálogo basado en RiveScript.",
+    tech: ["Python", "RiveScript", "HTML"]
+  },
+  {
+    title: "Hornerito",
+    description:
+      "Aplicación utilitaria desarrollada como proyecto independiente en Java.",
+    tech: ["Java", "Desktop App"]
   }
 ]
 

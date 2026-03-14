@@ -1,0 +1,767 @@
+/* ============================================================
+   experience.css — HACKER MODE / MATRIX TERMINAL THEME
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap');
+
+/* ── ROOT VARS ── */
+:root {
+  --green-bright:   #00ff41;
+  --green-mid:      #00cc33;
+  --green-dim:      #00882a;
+  --green-glow:     rgba(0, 255, 65, 0.18);
+  --green-border:   rgba(0, 255, 65, 0.3);
+  --green-subtle:   rgba(0, 255, 65, 0.06);
+
+  --bg-void:        #000000;
+  --bg-deep:        #010a04;
+  --bg-panel:       #020d06;
+  --bg-card:        #030f07;
+  --bg-selected:    #001a08;
+
+  --text-primary:   #c8ffd0;
+  --text-secondary: #7adb94;
+  --text-muted:     #3d8a50;
+  --text-white:     #e8fff0;
+
+  --font-mono:      'Share Tech Mono', 'Courier New', monospace;
+  --font-display:   'Orbitron', monospace;
+  --font-body:      'Courier Prime', 'Courier New', monospace;
+}
+
+/* ── SHELL ── */
+.experience-shell {
+  width: 100%;
+  max-width: 1960px;
+  font-family: var(--font-mono);
+}
+
+/* ── WINDOW ── */
+.experience-terminal {
+  width: 100%;
+  height: min(78vh, 820px);
+  min-height: 0;
+  border-radius: 4px 4px 2px 2px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-deep);
+  border: 1px solid var(--green-border);
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 65, 0.08),
+    0 0 30px rgba(0, 255, 65, 0.06),
+    0 0 80px rgba(0, 0, 0, 0.9),
+    inset 0 0 60px rgba(0, 255, 65, 0.015);
+}
+
+/* ── TITLE BAR ── */
+.experience-header {
+  background: linear-gradient(
+    180deg,
+    #001508 0%,
+    #000e05 50%,
+    #000c04 100%
+  );
+  padding: 4px 6px 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--green-border);
+  user-select: none;
+  min-height: 32px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.experience-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+  opacity: 0.4;
+}
+
+.experience-header-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border: 1px solid var(--green-border);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green-subtle);
+  box-shadow: 0 0 6px var(--green-glow);
+}
+
+.experience-titlebar {
+  flex: 1;
+  color: var(--green-bright);
+  font-weight: 400;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);
+}
+
+.experience-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  border-left: 1px solid var(--green-border);
+  padding-left: 8px;
+  margin-left: 4px;
+  font-family: var(--font-mono);
+}
+
+/* Window control buttons */
+.experience-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.experience-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--text-muted);
+  cursor: default;
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  background: rgba(0, 255, 65, 0.04);
+  transition: all 0.1s;
+  font-family: var(--font-mono);
+}
+
+.dot-green,
+.dot-yellow {
+  color: var(--text-muted);
+}
+
+.dot-red {
+  border-color: rgba(255, 50, 50, 0.4);
+  background: rgba(255, 50, 50, 0.07);
+  color: rgba(255, 80, 80, 0.7);
+}
+
+.dot-red:hover {
+  background: rgba(255, 50, 50, 0.2);
+  color: #ff4444;
+  border-color: rgba(255, 50, 50, 0.6);
+}
+
+/* ── MENU BAR ── */
+.experience-menubar {
+  background: #000d05;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.12);
+  padding: 2px 6px;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.experience-menu-item {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  cursor: default;
+  letter-spacing: 0.05em;
+}
+
+.experience-menu-item:hover {
+  background: var(--green-subtle);
+  color: var(--green-bright);
+  border-color: var(--green-border);
+}
+
+/* ── TOOLBAR ── */
+.experience-toolbar {
+  background: #000d05;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.15);
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.experience-tool-btn {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  background: rgba(0, 255, 65, 0.04);
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  border-radius: 2px;
+  color: var(--text-secondary);
+  cursor: default;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  transition: all 0.1s;
+}
+
+.experience-tool-btn:hover:not(.disabled) {
+  background: rgba(0, 255, 65, 0.1);
+  border-color: var(--green-mid);
+  color: var(--green-bright);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.15);
+}
+
+.experience-tool-btn.disabled {
+  color: var(--text-muted);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.experience-go-btn {
+  padding: 3px 16px;
+  background: rgba(0, 255, 65, 0.08);
+  border-color: var(--green-dim);
+  color: var(--green-mid);
+}
+
+.experience-tool-sep {
+  width: 1px;
+  height: 20px;
+  background: rgba(0, 255, 65, 0.15);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.experience-address-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px 8px;
+  min-width: 0;
+  margin-left: 6px;
+  border-radius: 2px;
+}
+
+.experience-address-label {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--green-dim);
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.experience-address-value {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--green-bright);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
+}
+
+/* ── BODY SPLIT ── */
+.experience-body-split {
+  display: flex;
+  background: var(--bg-void);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── SIDE PANEL ── */
+.experience-panel {
+  width: 190px;
+  flex-shrink: 0;
+  background: var(--bg-panel);
+  border-right: 1px solid rgba(0, 255, 65, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.experience-panel-section {
+  flex-shrink: 0;
+}
+
+.experience-panel-header {
+  background: linear-gradient(180deg, #001a08, #000e05);
+  color: var(--green-bright);
+  font-weight: 400;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: default;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.15);
+  user-select: none;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+}
+
+.experience-panel-arrow {
+  font-size: 9px;
+  color: var(--green-dim);
+}
+
+.experience-panel-body {
+  background: var(--bg-panel);
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.experience-panel-link {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  padding: 3px 0;
+  cursor: default;
+  text-decoration: none;
+  display: block;
+  letter-spacing: 0.03em;
+  transition: color 0.1s;
+}
+
+.experience-panel-link:hover {
+  color: var(--green-bright);
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
+}
+
+.experience-panel-link--active {
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+.experience-panel-details {
+  margin-top: auto;
+  background: rgba(0, 255, 65, 0.025);
+  border-top: 1px solid rgba(0, 255, 65, 0.12);
+  padding: 10px;
+  flex: 1;
+}
+
+.experience-panel-details-title {
+  font-family: var(--font-mono);
+  font-weight: bold;
+  color: var(--green-mid);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.experience-panel-details-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.experience-panel-details-row strong {
+  color: var(--text-secondary);
+}
+
+/* ── CONTENT AREA ── */
+.experience-content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+
+/* ── BANNER ── */
+.experience-banner {
+  background: linear-gradient(90deg, #000e05 0%, #000c04 100%);
+  border-bottom: 1px solid rgba(0, 255, 65, 0.18);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.experience-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+  opacity: 0.25;
+}
+
+/* Folder icon — terminal style */
+.experience-folder-icon {
+  width: 36px;
+  height: 30px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, rgba(0,255,65,0.15) 0%, rgba(0,255,65,0.05) 100%);
+  border: 1px solid var(--green-border);
+  border-radius: 2px 5px 2px 2px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+}
+
+.experience-folder-icon::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 14px;
+  height: 5px;
+  background: linear-gradient(180deg, rgba(0,255,65,0.2), rgba(0,255,65,0.1));
+  border: 1px solid var(--green-border);
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+}
+
+.experience-kicker {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--green-dim);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.experience-title {
+  font-size: 18px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--green-bright);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 16px rgba(0, 255, 65, 0.5);
+}
+
+.experience-subtitle {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+
+/* ── EXPERIENCE BODY (scrollable) ── */
+.experience-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--bg-deep);
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+.experience-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.experience-body::-webkit-scrollbar-track {
+  background: #000902;
+  border-left: 1px solid rgba(0, 255, 65, 0.08);
+}
+
+.experience-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(0,255,65,0.3), rgba(0,255,65,0.15));
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  border-radius: 2px;
+}
+
+.experience-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(0,255,65,0.5), rgba(0,255,65,0.3));
+}
+
+/* ── JOB LIST ── */
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  min-height: min-content;
+}
+
+/* ── EXPERIENCE CARD ── */
+.experience-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.07);
+  cursor: default;
+  transition: background 0.12s;
+  position: relative;
+}
+
+.experience-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: transparent;
+  transition: background 0.12s;
+}
+
+.experience-card:hover {
+  background: rgba(0, 255, 65, 0.04);
+}
+
+.experience-card:hover::before {
+  background: var(--green-dim);
+}
+
+.experience-card--selected {
+  background: rgba(0, 255, 65, 0.07);
+}
+
+.experience-card--selected::before {
+  background: var(--green-bright);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+}
+
+.experience-card--selected:hover {
+  background: rgba(0, 255, 65, 0.09);
+}
+
+/* Card icons */
+.experience-card-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 255, 65, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-top: 2px;
+  background: rgba(0, 255, 65, 0.05);
+  box-shadow: 0 0 12px rgba(0, 255, 65, 0.08);
+}
+
+.experience-card-icon--dev {
+  border-color: rgba(0, 200, 255, 0.3);
+  background: rgba(0, 200, 255, 0.06);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.08);
+}
+
+.experience-card-icon--teach {
+  border-color: rgba(0, 255, 65, 0.3);
+  background: rgba(0, 255, 65, 0.05);
+}
+
+.experience-card-icon--infra {
+  border-color: rgba(255, 170, 0, 0.3);
+  background: rgba(255, 170, 0, 0.05);
+  box-shadow: 0 0 12px rgba(255, 170, 0, 0.06);
+}
+
+.experience-card-icon--net {
+  border-color: rgba(200, 50, 255, 0.3);
+  background: rgba(200, 50, 255, 0.05);
+  box-shadow: 0 0 12px rgba(200, 50, 255, 0.06);
+}
+
+.experience-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.experience-card-top {
+  margin-bottom: 6px;
+}
+
+.experience-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 4px;
+}
+
+.experience-year {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--green-dim);
+  letter-spacing: 0.1em;
+}
+
+.experience-card--selected .experience-year {
+  color: var(--green-mid);
+}
+
+.experience-separator {
+  width: 1px;
+  height: 10px;
+  background: rgba(0, 255, 65, 0.2);
+  flex-shrink: 0;
+}
+
+.experience-role {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.experience-card--selected .experience-role {
+  color: var(--text-secondary);
+}
+
+.experience-company-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.experience-index {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: rgba(0, 255, 65, 0.2);
+  flex-shrink: 0;
+  letter-spacing: 0.06em;
+}
+
+.experience-card--selected .experience-index {
+  color: rgba(0, 255, 65, 0.35);
+}
+
+.experience-company {
+  font-size: 15px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--green-bright);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.4);
+}
+
+.experience-card--selected .experience-company {
+  color: var(--green-bright);
+  text-shadow: 0 0 14px rgba(0, 255, 65, 0.6);
+}
+
+.experience-card:hover:not(.experience-card--selected) .experience-company {
+  text-shadow: 0 0 14px rgba(0, 255, 65, 0.6);
+}
+
+/* ── TASKS ── */
+.experience-tasks {
+  list-style: none;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+}
+
+.experience-task {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+.experience-card--selected .experience-task {
+  color: var(--text-primary);
+}
+
+.experience-bullet {
+  color: var(--green-bright);
+  font-size: 10px;
+  flex-shrink: 0;
+  margin-top: 4px;
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.7);
+}
+
+.experience-card--selected .experience-bullet {
+  color: var(--green-bright);
+}
+
+/* ── STATUS BAR ── */
+.experience-statusbar {
+  background: #000902;
+  border-top: 1px solid rgba(0, 255, 65, 0.15);
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.experience-status-pane {
+  border: 1px solid rgba(0, 255, 65, 0.15);
+  padding: 1px 8px;
+  background: rgba(0, 255, 65, 0.03);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.experience-status-pane:first-child {
+  flex: 1;
+}
+
+.experience-status-grip {
+  font-size: 12px;
+  color: var(--green-dim);
+  align-self: flex-end;
+  line-height: 1;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .experience-panel {
+    display: none;
+  }
+
+  .experience-toolbar .experience-address-bar {
+    display: none;
+  }
+
+  .experience-card {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .experience-card-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+  }
+
+  .experience-company {
+    font-size: 13px;
+  }
+
+  .experience-task {
+    font-size: 11px;
+  }
+}

@@ -156,17 +156,6 @@
   border-radius: 50%;
 }
 
-.dot-red {
-  background: #ff5f57;
-}
-
-.dot-yellow {
-  background: #febc2e;
-}
-
-.dot-green {
-  background: #28c840;
-}
 
 .term-title {
   flex: 1;
@@ -210,11 +199,13 @@
 .term-lines {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.02rem;
 }
 
 .term-line {
-  line-height: 1.55;
+  line-height: 1.08;
+  margin: 0;
+  padding: 0;
   animation: lineIn 0.12s ease both;
 }
 
@@ -230,10 +221,14 @@
 }
 
 .term-system {
+  display: block;
+  margin: 0;
+  padding: 0;
   font-family: "Share Tech Mono", "JetBrains Mono", monospace;
-  font-size: 0.75rem;
-  color: rgba(0, 255, 80, 0.35);
-  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  line-height: 1.08;
+  color: rgba(0, 255, 80, 0.42);
+  letter-spacing: 0.03em;
 }
 
 .term-cmd {
@@ -319,6 +314,9 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 255, 80, 0.15) transparent;
   overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: auto;
 }
 
   .term-output {
@@ -375,6 +373,8 @@
     width: min(92vw, 680px);
     height: min(74vh, 620px);
     margin: 0 auto;
+      overscroll-behavior: contain;
+      touch-action: manipulation;
   }
 
   .term-body {
@@ -446,10 +446,32 @@
     padding: 0.58rem 0.72rem;
   }
 
-  .term-dot {
-    width: 9px;
-    height: 9px;
-  }
+.term-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #0c2014;
+  border: 1px solid rgba(0,255,80,0.25);
+  box-shadow: inset 0 0 4px rgba(0,255,80,0.2);
+}
+
+/* minimizar */
+.dot-red {
+  background: radial-gradient(circle, #00ff50 0%, #007a2c 70%);
+  box-shadow: 0 0 6px rgba(0,255,80,0.6);
+}
+
+/* maximizar */
+.dot-yellow {
+  background: radial-gradient(circle, #7dff9f 0%, #009e44 70%);
+  box-shadow: 0 0 6px rgba(0,255,80,0.5);
+}
+
+/* cerrar */
+.dot-green {
+  background: radial-gradient(circle, #caffdc 0%, #00b34a 70%);
+  box-shadow: 0 0 8px rgba(0,255,80,0.8);
+}
 
   .term-title {
     font-size: 0.58rem;

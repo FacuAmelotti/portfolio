@@ -149,23 +149,27 @@ export default function About() {
     })
   }, [lines])
 
-  useEffect(() => {
-    const el = termBodyRef.current
-    if (!el) return
+    useEffect(() => {
+      const el = termBodyRef.current
+      if (!el) return
 
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
+      const onWheel = (e: WheelEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
 
-      el.scrollTop += e.deltaY
-    }
+        const maxScroll = el.scrollHeight - el.clientHeight
+        if (maxScroll <= 0) return
 
-    el.addEventListener("wheel", onWheel, { passive: false })
+        const next = el.scrollTop + e.deltaY
+        el.scrollTop = Math.max(0, Math.min(maxScroll, next))
+      }
 
-    return () => {
-      el.removeEventListener("wheel", onWheel)
-    }
-  }, [])
+      el.addEventListener("wheel", onWheel, { passive: false })
+
+      return () => {
+        el.removeEventListener("wheel", onWheel)
+      }
+    }, [])
 
   return (
     <section id="about" className="about-section" onMouseDown={handleTerminalClick}>

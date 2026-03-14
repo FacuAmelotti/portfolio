@@ -5,11 +5,12 @@ import Tech from "./sections/tech"
 import Projects from "./sections/projects"
 import Experience from "./sections/experience"
 import Contact from "./sections/contact"
+import Music from "./sections/music"
 import Nav from "./components/nav"
 import "./styles/globals.css"
 import "./styles/app.css"
 
-const SECTIONS = ["hero", "about", "tech", "projects", "experience", "contact"] as const
+const SECTIONS = ["hero", "about", "tech", "projects", "experience","music", "contact"] as const
 type Section = (typeof SECTIONS)[number]
 
 const SECTION_COMPONENTS: Record<Section, React.ComponentType<{ active: boolean }>> = {
@@ -18,6 +19,7 @@ const SECTION_COMPONENTS: Record<Section, React.ComponentType<{ active: boolean 
   tech: Tech,
   projects: Projects,
   experience: Experience,
+  music: Music,
   contact: Contact,
 }
 
