@@ -438,10 +438,10 @@ export default function Hero({ active }: { active: boolean }) {
              &gt; Software Developer
           </p>
 
-          <p className={`hero-desc hero-reveal hero-reveal-2 ${reveal ? "visible" : ""}`}>
-            Ingeniería de sistemas escalables, observabilidad, automatización y despliegue
-            de infraestructuras modernas.
-          </p>
+<p className={`hero-desc hero-reveal hero-reveal-2 ${reveal ? "visible" : ""}`}>
+  Software developer enfocado en backend, arquitectura de sistemas y plataformas escalables.
+</p>
+
         </div>
       </div>
     </div>

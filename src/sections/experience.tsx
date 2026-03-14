@@ -12,65 +12,88 @@ export default function Experience() {
     if (!windowEl || !scrollEl) return
 
     let startY = 0
+    let startX = 0
+    let lastY = 0
+    let isVerticalGesture: boolean | null = null
 
     const canScroll = () => scrollEl.scrollHeight > scrollEl.clientHeight + 1
 
     const scrollByDelta = (deltaY: number) => {
       if (!canScroll()) return
 
-      const atTop = scrollEl.scrollTop <= 0
-      const atBottom =
-        scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 1
-
-      if ((deltaY < 0 && !atTop) || (deltaY > 0 && !atBottom)) {
-        scrollEl.scrollTop += deltaY
-      }
+      const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight
+      const next = scrollEl.scrollTop + deltaY
+      scrollEl.scrollTop = Math.max(0, Math.min(maxScroll, next))
     }
 
     const onWheel = (e: WheelEvent) => {
-      // Si el mouse está sobre cualquier parte de la ventana XP,
-      // jamás dejamos que el evento llegue al slider/página
       e.preventDefault()
       e.stopPropagation()
-
       scrollByDelta(e.deltaY)
     }
 
     const onTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 0) return
+      if (e.touches.length !== 1) return
+
+      startX = e.touches[0].clientX
       startY = e.touches[0].clientY
+      lastY = startY
+      isVerticalGesture = null
+
       e.stopPropagation()
     }
 
     const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 0) return
+      if (e.touches.length !== 1) return
 
-      const currentY = e.touches[0].clientY
-      const deltaY = startY - currentY
+      const touch = e.touches[0]
+      const currentY = touch.clientY
+      const currentX = touch.clientX
 
-      // Igual que wheel: bloquear siempre la navegación de página
+      const totalDeltaY = startY - currentY
+      const totalDeltaX = startX - currentX
+      const stepDeltaY = lastY - currentY
+
+      if (isVerticalGesture === null) {
+        isVerticalGesture = Math.abs(totalDeltaY) > Math.abs(totalDeltaX)
+      }
+
+      if (!isVerticalGesture) return
+
       e.preventDefault()
       e.stopPropagation()
 
-      scrollByDelta(deltaY)
-      startY = currentY
+      scrollByDelta(stepDeltaY)
+      lastY = currentY
+    }
+
+    const onTouchEnd = (e: TouchEvent) => {
+      e.stopPropagation()
+      startY = 0
+      startX = 0
+      lastY = 0
+      isVerticalGesture = null
     }
 
     windowEl.addEventListener("wheel", onWheel, { passive: false })
-    windowEl.addEventListener("touchstart", onTouchStart, { passive: false })
+    windowEl.addEventListener("touchstart", onTouchStart, { passive: true })
     windowEl.addEventListener("touchmove", onTouchMove, { passive: false })
+    windowEl.addEventListener("touchend", onTouchEnd, { passive: true })
+    windowEl.addEventListener("touchcancel", onTouchEnd, { passive: true })
 
     return () => {
       windowEl.removeEventListener("wheel", onWheel)
       windowEl.removeEventListener("touchstart", onTouchStart)
       windowEl.removeEventListener("touchmove", onTouchMove)
+      windowEl.removeEventListener("touchend", onTouchEnd)
+      windowEl.removeEventListener("touchcancel", onTouchEnd)
     }
   }, [])
 
   return (
     <section id="experience" className="experience-section">
       <div className="experience-shell">
-        <div className="experience-terminal" ref={windowRef}>
+        <div className="experience-terminal" ref={windowRef} data-no-nav>
           <div className="experience-header">
             <div className="experience-header-icon">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -141,12 +164,12 @@ export default function Experience() {
                   <div className="experience-kicker">CAREER_PATH</div>
                   <h2 className="experience-title">Experiencia profesional</h2>
                   <p className="experience-subtitle">
-                  Roles, proyectos y enfoque tecnico en desplieges, desarrollos, infraestructuras y tutorias.
+                    Roles, proyectos y enfoque tecnico en desplieges, desarrollos, infraestructuras y tutorias.
                   </p>
                 </div>
               </div>
 
-              <div className="experience-body" ref={bodyRef}>
+              <div className="experience-body" ref={bodyRef} data-no-nav>
                 <div className="experience-list">
                   {experience.map((job, index) => (
                     <article

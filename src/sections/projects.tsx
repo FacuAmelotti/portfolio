@@ -23,12 +23,16 @@ export default function Projects() {
     let startY = 0
     let startX = 0
     let lastY = 0
+    let isVerticalGesture: boolean | null = null
 
     const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length !== 1) return
+
       startX = e.touches[0].clientX
       startY = e.touches[0].clientY
       lastY = startY
+      isVerticalGesture = null
+
       e.stopPropagation()
     }
 
@@ -39,34 +43,41 @@ export default function Projects() {
       const currentY = touch.clientY
       const currentX = touch.clientX
 
-      const deltaY = lastY - currentY
-      const deltaX = currentX - startX
+      const totalDeltaY = startY - currentY
+      const totalDeltaX = startX - currentX
+      const stepDeltaY = lastY - currentY
 
-      if (Math.abs(deltaY) >= Math.abs(deltaX)) {
-        e.preventDefault()
-        e.stopPropagation()
-
-        const maxScroll = el.scrollHeight - el.clientHeight
-        if (maxScroll <= 0) {
-          lastY = currentY
-          return
-        }
-
-        const next = el.scrollTop + deltaY
-        el.scrollTop = Math.max(0, Math.min(maxScroll, next))
+      if (isVerticalGesture === null) {
+        isVerticalGesture = Math.abs(totalDeltaY) > Math.abs(totalDeltaX)
       }
 
+      if (!isVerticalGesture) return
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      const maxScroll = el.scrollHeight - el.clientHeight
+      if (maxScroll <= 0) {
+        lastY = currentY
+        return
+      }
+
+      const next = el.scrollTop + stepDeltaY
+      el.scrollTop = Math.max(0, Math.min(maxScroll, next))
       lastY = currentY
     }
 
-    const onTouchEnd = () => {
-      startY = 0
-      startX = 0
-      lastY = 0
-    }
+const onTouchEnd = (e: TouchEvent) => {
+  e.stopPropagation()
+  startY = 0
+  startX = 0
+  lastY = 0
+  isVerticalGesture = null
+}
+
 
     el.addEventListener("wheel", onWheel, { passive: false })
-    el.addEventListener("touchstart", onTouchStart, { passive: false })
+    el.addEventListener("touchstart", onTouchStart, { passive: true })
     el.addEventListener("touchmove", onTouchMove, { passive: false })
     el.addEventListener("touchend", onTouchEnd, { passive: true })
     el.addEventListener("touchcancel", onTouchEnd, { passive: true })
@@ -88,7 +99,7 @@ export default function Projects() {
           <h2 className="projects-title">Own Projects</h2>
         </div>
 
-        <div ref={cardsRef} className="cards-container">
+        <div ref={cardsRef} className="cards-container" data-no-nav>
           {projects.map((project, index) => (
             <article className="project-card" key={project.title}>
               <div className="card-glow" />

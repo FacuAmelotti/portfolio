@@ -62,7 +62,8 @@ const BOOT_SEQUENCE = [
 
 ]
 
-export default function About() {
+export default function About({ active }: { active: boolean }) {
+const [isEntering, setIsEntering] = useState(false)
   const [lines, setLines] = useState<string[]>([])
   const [isGlitching, setIsGlitching] = useState(false)
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
@@ -122,22 +123,36 @@ export default function About() {
     setTimeout(() => setIsGlitching(false), 150)
   }
 
-  useEffect(() => {
+useEffect(() => {
+  if (!active) return
+
+  setIsEntering(true)
+  const t = setTimeout(() => setIsEntering(false), 650)
+
+  return () => clearTimeout(t)
+}, [active])
+
+
+useEffect(() => {
+  if (!active) return
+
+  timersRef.current.forEach(clearTimeout)
+  timersRef.current = []
+  setLines([])
+
+  BOOT_SEQUENCE.forEach(({ delay, text }) => {
+    const t = setTimeout(() => {
+      setLines((prev) => [...prev, text])
+    }, delay)
+    timersRef.current.push(t)
+  })
+
+  return () => {
     timersRef.current.forEach(clearTimeout)
-    timersRef.current = []
-    setLines([])
+  }
+}, [active])
 
-    BOOT_SEQUENCE.forEach(({ delay, text }) => {
-      const t = setTimeout(() => {
-        setLines((prev) => [...prev, text])
-      }, delay)
-      timersRef.current.push(t)
-    })
 
-    return () => {
-      timersRef.current.forEach(clearTimeout)
-    }
-  }, [])
 
   useEffect(() => {
     const el = termBodyRef.current
@@ -171,14 +186,21 @@ export default function About() {
       }
     }, [])
 
+
   return (
     <section id="about" className="about-section" onMouseDown={handleTerminalClick}>
       <div className="about-bg" />
-      <div className="about-scanlines" />
+      <div className={`about-scanlines ${isEntering ? "about-scanlines-active" : ""}`} />
+
       <div className="about-vignette" />
 
       <div className="about-shell">
-        <div className={`about-terminal ${isGlitching ? "glitch-active" : ""}`}>
+        <div
+          className={`about-terminal ${isGlitching ? "glitch-active" : ""} ${
+            isEntering ? "about-enter-active" : ""
+          }`}
+        >
+
           <div className="term-header">
             <div className="term-dots">
               <span className="term-dot dot-red" />
@@ -190,7 +212,8 @@ export default function About() {
             <span className="term-hint">system_active</span>
           </div>
 
-          <div className="term-body" ref={termBodyRef}>
+          <div className="term-body no-page-nav" ref={termBodyRef} data-no-nav>
+
             <div className="term-lines">
               {lines.map((line, i) => (
                 <div key={i} className="term-line">

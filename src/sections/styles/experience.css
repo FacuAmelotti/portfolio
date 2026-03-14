@@ -765,3 +765,9 @@
     font-size: 11px;
   }
 }
+
+.experience-terminal,
+.experience-body {
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}

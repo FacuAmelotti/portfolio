@@ -69,56 +69,165 @@ export default function App() {
   // Wheel navigation with debounce
   useEffect(() => {
     let lastWheel = 0
+
     const handler = (e: WheelEvent) => {
+      if (transitioning) return
+
+      // Si el evento ocurre dentro de algo interactivo o con scroll interno, no navegar
+      if (shouldBlockPageNavigation(e.target) || isScrollableElement(e.target)) {
+        return
+      }
+
       const now = Date.now()
       if (now - lastWheel < 900) return
-      lastWheel = now
-      if (e.deltaY > 30) goNext()
-      else if (e.deltaY < -30) goPrev()
+
+      if (e.deltaY > 30) {
+        lastWheel = now
+        goNext()
+      } else if (e.deltaY < -30) {
+        lastWheel = now
+        goPrev()
+      }
     }
+
     window.addEventListener("wheel", handler, { passive: true })
     return () => window.removeEventListener("wheel", handler)
-  }, [goNext, goPrev])
+  }, [goNext, goPrev, transitioning])
+
 
   // Touch swipe
   useEffect(() => {
     let startY = 0
-    const onStart = (e: TouchEvent) => { startY = e.touches[0].clientY }
-    const onEnd = (e: TouchEvent) => {
-      const diff = startY - e.changedTouches[0].clientY
-      if (Math.abs(diff) > 50) diff > 0 ? goNext() : goPrev()
+    let startX = 0
+    let blocked = false
+
+    const onStart = (e: TouchEvent) => {
+      const targetBlocked =
+        shouldBlockPageNavigation(e.target) || isScrollableElement(e.target)
+
+      blocked = targetBlocked
+      startY = e.touches[0].clientY
+      startX = e.touches[0].clientX
     }
+
+    const onEnd = (e: TouchEvent) => {
+      if (transitioning || blocked) {
+        blocked = false
+        return
+      }
+
+      const endY = e.changedTouches[0].clientY
+      const endX = e.changedTouches[0].clientX
+
+      const diffY = startY - endY
+      const diffX = startX - endX
+
+      if (Math.abs(diffY) < Math.abs(diffX)) {
+        blocked = false
+        return
+      }
+
+      if (Math.abs(diffY) > 60) {
+        diffY > 0 ? goNext() : goPrev()
+      }
+
+      blocked = false
+    }
+
     window.addEventListener("touchstart", onStart, { passive: true })
     window.addEventListener("touchend", onEnd, { passive: true })
+
     return () => {
       window.removeEventListener("touchstart", onStart)
       window.removeEventListener("touchend", onEnd)
     }
-  }, [goNext, goPrev])
+  }, [goNext, goPrev, transitioning])
+
+
+const BLOCK_NAV_SELECTOR = `
+  [data-no-nav],
+  .no-page-nav,
+  input,
+  textarea,
+  select,
+  button,
+  a,
+  [role="button"],
+  [contenteditable="true"]
+`
+
+function getTargetElement(target: EventTarget | null): Element | null {
+  if (!target) return null
+
+  if (target instanceof Element) return target
+
+  if (target instanceof Node) {
+    return target.parentElement
+  }
+
+  return null
+}
+
+function shouldBlockPageNavigation(target: EventTarget | null) {
+  const el = getTargetElement(target)
+  if (!el) return false
+  return !!el.closest(BLOCK_NAV_SELECTOR)
+}
+
+function isScrollableElement(target: EventTarget | null) {
+  let el = getTargetElement(target)
+
+  while (el) {
+    if (el instanceof HTMLElement) {
+      const style = window.getComputedStyle(el)
+      const overflowY = style.overflowY
+      const canScroll =
+        (overflowY === "auto" || overflowY === "scroll") &&
+        el.scrollHeight > el.clientHeight
+
+      if (canScroll) return true
+    }
+
+    el = el.parentElement
+  }
+
+  return false
+}
 
   return (
     <div className="app">
-      <Nav current={current} sections={[...SECTIONS]} onNavigate={goTo} />
+      <Nav
+        current={current}
+        sections={[...SECTIONS]}
+        onNavigate={goTo}
+        transitioning={transitioning}
+      />
+
 
       {/* Dot navigator */}
-      <aside className="dot-nav">
-        {SECTIONS.map((s) => (
-          <button
-            key={s}
-            className={`dot ${s === current ? "active" : ""}`}
-            onClick={() => goTo(s)}
-            aria-label={s}
-          />
-        ))}
-      </aside>
+<aside className={`dot-nav ${transitioning ? "is-transitioning" : ""}`}>
+  {SECTIONS.map((s) => (
+    <button
+      key={s}
+      className={`dot ${s === current ? "active" : ""}`}
+      onClick={() => goTo(s)}
+      aria-label={s}
+      disabled={transitioning}
+    />
+  ))}
+</aside>
+
 
       {/* Section progress bar */}
-      <div className="progress-bar">
-        <div
-          className="progress-fill"
-          style={{ width: `${((SECTIONS.indexOf(current) + 1) / SECTIONS.length) * 100}%` }}
-        />
-      </div>
+<div className={`progress-bar progress-${current}`}>
+  <div
+    className="progress-fill"
+    style={{
+      width: `${((SECTIONS.indexOf(current) + 1) / SECTIONS.length) * 100}%`,
+    }}
+  />
+</div>
+
 
       {/* Section counter */}
       <div className="section-counter">
@@ -148,22 +257,26 @@ export default function App() {
       </main>
 
       {/* Arrow hints */}
-      <div className="nav-arrows">
-        <button
-          className={`arrow-btn ${SECTIONS.indexOf(current) === 0 ? "disabled" : ""}`}
-          onClick={goPrev}
-          aria-label="Previous"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="18 15 12 9 6 15"/></svg>
-        </button>
-        <button
-          className={`arrow-btn ${SECTIONS.indexOf(current) === SECTIONS.length - 1 ? "disabled" : ""}`}
-          onClick={goNext}
-          aria-label="Next"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-      </div>
+     <div className={`nav-arrows ${transitioning ? "is-transitioning" : ""}`}>
+       <button
+         className={`arrow-btn ${SECTIONS.indexOf(current) === 0 ? "disabled" : ""}`}
+         onClick={goPrev}
+         aria-label="Previous"
+         disabled={transitioning || SECTIONS.indexOf(current) === 0}
+       >
+        🢁
+       </button>
+
+       <button
+         className={`arrow-btn ${SECTIONS.indexOf(current) === SECTIONS.length - 1 ? "disabled" : ""}`}
+         onClick={goNext}
+         aria-label="Next"
+         disabled={transitioning || SECTIONS.indexOf(current) === SECTIONS.length - 1}
+       >
+         🢃
+       </button>
+     </div>
+
     </div>
   )
 }
