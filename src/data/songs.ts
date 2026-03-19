@@ -5,7 +5,6 @@ import s_ignis from "../assets/audio/songs/ignis.mp3"
 import s_victus from "../assets/audio/songs/victus.mp3"
 import s_bla from "../assets/audio/songs/bla.mp3"
 import s_concussa from "../assets/audio/songs/concussa.mp3"
-import s_toxic from "../assets/audio/songs/toxic.mp3"
 import s_perse from "../assets/audio/songs/perse.mp3"
 
 //otras
@@ -327,7 +326,7 @@ export const songs: Song[] = [
   {
     title: "Cold",
     subtitle: "Beat",
-    description: "Esta cancion la hice en 2020, espero les guste.",
+    description: "...",
     cover: i_cold,
     audio: s_cold,
     category: "beats",
@@ -342,7 +341,7 @@ export const songs: Song[] = [
   {
     title: "Caessar",
     subtitle: "Beat",
-    description: "Esta cancion la hice en 2020, espero les guste.",
+    description: "...",
     cover: i_ceasar,
     audio: s_caessar,
     category: "beats",
@@ -357,7 +356,7 @@ export const songs: Song[] = [
   {
     title: "Non vident",
     subtitle: "Beat",
-    description: "Esta cancion la hice en 2020, espero les guste.",
+    description: "...",
     cover: i_non_vident,
     audio: s_non_vident,
     category: "beats",
@@ -372,7 +371,7 @@ export const songs: Song[] = [
   {
     title: "Vesperi",
     subtitle: "Beat",
-    description: "Esta cancion la hice en 2020, espero les guste.",
+    description: "...",
     cover: i_vesperi,
     audio: s_vesperi,
     category: "beats",
@@ -387,7 +386,7 @@ export const songs: Song[] = [
   {
     title: "Boulevard",
     subtitle: "Beat",
-    description: "Esta cancion la hice en 2020, espero les guste.",
+    description: "...",
     cover: i_boulevard,
     audio: s_boulevard,
     category: "beats",
@@ -402,7 +401,7 @@ export const songs: Song[] = [
   {
     title: "Cassete",
     subtitle: "Beat",
-    description: "Esta cancion la hice en 2020, espero les guste.",
+    description: "...",
     cover: i_cassete,
     audio: s_cassete,
     category: "beats",
@@ -410,6 +409,21 @@ export const songs: Song[] = [
     dots: 120,
     dotSize: 1.8,
     dotColor: "rgba(32,155,225,0.72)",
+    rotationSpeed: 0.22,
+    glowInner: "rgba(32,32,32,0.14)",
+    glowMid: "rgba(32,32,32,0.06)",
+  },
+{
+    title: "Dimissi",
+    subtitle: "Beat",
+    description: "...",
+    cover: i_dimissi,
+    audio: s_dimissi,
+    category: "beats",
+
+    dots: 120,
+    dotSize: 1.8,
+    dotColor: "rgba(232,115,225,0.72)",
     rotationSpeed: 0.22,
     glowInner: "rgba(32,32,32,0.14)",
     glowMid: "rgba(32,32,32,0.06)",
@@ -492,21 +506,7 @@ export const songs: Song[] = [
     glowInner: "rgba(32,32,32,0.14)",
     glowMid: "rgba(32,32,32,0.06)",
   },
-  {
-    title: "Dimissi",
-    subtitle: "Electronic",
-    description: "Esta cancion la hice en el año 2021",
-    cover: i_dimissi,
-    audio: s_dimissi,
-    category: "nostalgias",
 
-    dots: 120,
-    dotSize: 1.8,
-    dotColor: "rgba(232,115,225,0.72)",
-    rotationSpeed: 0.22,
-    glowInner: "rgba(32,32,32,0.14)",
-    glowMid: "rgba(32,32,32,0.06)",
-  },
 {
     title: "Elegans",
     subtitle: "Chill Suspense",

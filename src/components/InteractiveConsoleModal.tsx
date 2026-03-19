@@ -59,7 +59,7 @@ export default function InteractiveConsoleModal({
   const [inputVisible, setInputVisible] = useState(false)
   const [command, setCommand] = useState("")
   const [history, setHistory] = useState<string[]>([])
-  const [historyIndex, setHistoryIndex] = useState<number | null>(null)
+  const [, setHistoryIndex] = useState<number | null>(null)
 
   const [lines, setLines] = useState<ConsoleRenderable[]>([
     { type: "text", content: "Welcome to the system..." },

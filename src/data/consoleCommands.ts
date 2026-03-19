@@ -25,15 +25,6 @@ export function getRandomSneakyMessage() {
 
 export type Section = (typeof SECTIONS)[number]
 
-export type Section =
-  | "hero"
-  | "about"
-  | "tech"
-  | "projects"
-  | "experience"
-  | "music"
-  | "contact"
-
 export type HelpCommandItem = {
   label: string
   command: string
