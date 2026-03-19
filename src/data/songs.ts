@@ -6,9 +6,10 @@ import s_victus from "../assets/audio/songs/victus.mp3"
 import s_bla from "../assets/audio/songs/bla.mp3"
 import s_concussa from "../assets/audio/songs/concussa.mp3"
 import s_perse from "../assets/audio/songs/perse.mp3"
+import s_caelum from "../assets/audio/songs/caelum.mp3"
 
 //otras
-import s_disaster from "../assets/audio/songs/disaster.mp3"
+import s_tenebris from "../assets/audio/songs/tenebris.mp3"
 import s_inter_infinitum from "../assets/audio/songs/inter-infinitum.mp3"
 import s_damnare from "../assets/audio/songs/damnare.mp3"
 import s_amissa from "../assets/audio/songs/amissa-morale.mp3"
@@ -54,7 +55,7 @@ import i_internumize from "../assets/images/songs/internumize.jpg"
 import i_cosmic from "../assets/images/songs/cosmic.png"
 import i_damnum from "../assets/images/songs/damnum.png"
 import i_dimissi from "../assets/images/songs/dimissi.png"
-import i_disaster from "../assets/images/songs/disaster.png"
+import i_tenebris from "../assets/images/songs/tenebris.png"
 import i_elegans from "../assets/images/songs/elegans.png"
 import i_facinorase from "../assets/images/songs/facinorase.png"
 import i_ignosce from "../assets/images/songs/ignosce.jpg"
@@ -66,6 +67,7 @@ import i_perse from "../assets/images/songs/perse.png"
 import i_vesperi from "../assets/images/songs/vesperi.png"
 import i_vetus from "../assets/images/songs/vetus.jpg"
 import i_voluptas from "../assets/images/songs/voluptas.jpg"
+import i_caelum from "../assets/images/songs/caelum.jpg"
 
 export type SongCategory = "favorites" | "others" | "beats" | "nostalgias"
 
@@ -197,11 +199,11 @@ export const songs: Song[] = [
     glowMid: "rgba(32,32,32,0.06)",
   },
   {
-    title: "Disaster",
+    title: "Caelum",
     subtitle: "Chill Dubs",
-    description: "Esta cancion la hice en 2020, espero les guste.",
-    cover: i_disaster,
-    audio: s_disaster,
+    description: "Esta cancion la hice en 2025, espero les guste.",
+    cover: i_caelum,
+    audio: s_caelum,
     category: "favorites",
 
     dots: 120,
@@ -284,6 +286,21 @@ export const songs: Song[] = [
     dots: 120,
     dotSize: 1.8,
     dotColor: "rgba(32,155,225,0.72)",
+    rotationSpeed: 0.22,
+    glowInner: "rgba(32,32,32,0.14)",
+    glowMid: "rgba(32,32,32,0.06)",
+  },
+{
+    title: "tenebris",
+    subtitle: "Chill Dubs",
+    description: "Esta cancion la hice en 2020, espero les guste.",
+    cover: i_tenebris,
+    audio: s_tenebris,
+    category: "others",
+
+    dots: 120,
+    dotSize: 1.8,
+    dotColor: "rgba(178,178,178,0.72)",
     rotationSpeed: 0.22,
     glowInner: "rgba(32,32,32,0.14)",
     glowMid: "rgba(32,32,32,0.06)",

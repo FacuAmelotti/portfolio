@@ -65,6 +65,7 @@ export default function Music({ active }: { active: boolean }) {
   const [currentSong, setCurrentSong] = useState<SongItem>(initialSong)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLibraryOpen, setIsLibraryOpen] = useState(false)
+  const [lowPerformanceMode, setLowPerformanceMode] = useState(false)
 
   const currentSongIndexInAll = useMemo(
     () => allSongs.findIndex((song) => song === currentSong),
@@ -84,6 +85,42 @@ export default function Music({ active }: { active: boolean }) {
       document.body.classList.remove("music-page")
     }
   }, [])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const mediaQuery = window.matchMedia("(max-width: 768px), (pointer: coarse)")
+    const applyModeFromDevice = () => {
+      setLowPerformanceMode(mediaQuery.matches)
+    }
+
+    applyModeFromDevice()
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", applyModeFromDevice)
+      return () => mediaQuery.removeEventListener("change", applyModeFromDevice)
+    }
+
+    mediaQuery.addListener(applyModeFromDevice)
+    return () => mediaQuery.removeListener(applyModeFromDevice)
+  }, [])
+
+  useEffect(() => {
+    const root = canvasRef.current?.closest(".music-root") as HTMLElement | null
+    if (!root) return
+
+    if (lowPerformanceMode) {
+      root.style.setProperty("--music-bg-scale", "1")
+      root.style.setProperty("--music-bg-brightness", "0.38")
+      root.style.setProperty("--music-bg-saturate", "0.72")
+    } else {
+      root.style.setProperty("--music-bg-scale", "1.12")
+      root.style.setProperty("--music-bg-brightness", "0.54")
+      root.style.setProperty("--music-bg-saturate", "1")
+    }
+  }, [lowPerformanceMode, currentSong])
+
+  // 🔴 ESTE ES EL CAMBIO IMPORTANTE
 
   useEffect(() => {
     if (!currentSong?.audio) return
@@ -142,15 +179,15 @@ export default function Music({ active }: { active: boolean }) {
         frequencyDataRef.current = null
       }
 
+
       if (isPlaying && !cancelled) {
         try {
           if (audioContextRef.current?.state === "suspended") {
             await audioContextRef.current.resume()
           }
           await audio.play()
-          if (!cancelled) setIsPlaying(true)
         } catch {
-          if (!cancelled) setIsPlaying(false)
+          setIsPlaying(false)
         }
       }
     }
@@ -177,7 +214,8 @@ export default function Music({ active }: { active: boolean }) {
       frequencyDataRef.current = null
       beatLevelRef.current = 0
     }
-  }, [currentSong, isPlaying])
+
+  }, [currentSong])
 
   useEffect(() => {
     if (!active) {
@@ -295,7 +333,54 @@ export default function Music({ active }: { active: boolean }) {
       return beatLevelRef.current
     }
 
+    const drawLowPerformanceStatic = () => {
+      const root = canvas.closest(".music-root") as HTMLElement | null
+      if (root) {
+        root.style.setProperty("--music-bg-scale", "1")
+        root.style.setProperty("--music-bg-brightness", "0.38")
+        root.style.setProperty("--music-bg-saturate", "0.72")
+      }
+
+      ctx.clearRect(0, 0, w, h)
+
+      const cx = w / 2
+      const cy = h / 2
+      const radius = Math.min(w, h) * 0.3
+
+      const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 1.35)
+      gradient.addColorStop(0, "rgba(255,255,255,0.08)")
+      gradient.addColorStop(0.55, "rgba(255,255,255,0.03)")
+      gradient.addColorStop(1, "rgba(0,0,0,0)")
+
+      ctx.beginPath()
+      ctx.arc(cx, cy, radius * 1.05, 0, Math.PI * 2)
+      ctx.fillStyle = gradient
+      ctx.fill()
+
+      ctx.beginPath()
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2)
+      ctx.strokeStyle = "rgba(255,255,255,0.14)"
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+
+      ctx.beginPath()
+      ctx.arc(cx, cy, radius * 0.64, 0, Math.PI * 2)
+      ctx.strokeStyle = "rgba(255,255,255,0.08)"
+      ctx.lineWidth = 1
+      ctx.stroke()
+
+      ctx.beginPath()
+      ctx.arc(cx, cy, radius * 0.06, 0, Math.PI * 2)
+      ctx.fillStyle = "rgba(255,255,255,0.72)"
+      ctx.fill()
+    }
+
     const draw = () => {
+      if (lowPerformanceMode) {
+        drawLowPerformanceStatic()
+        return
+      }
+
       time += 0.016
       ctx.clearRect(0, 0, w, h)
 
@@ -382,7 +467,7 @@ export default function Music({ active }: { active: boolean }) {
       cancelAnimationFrame(raf)
       window.removeEventListener("resize", resize)
     }
-  }, [active, currentSong, isPlaying])
+  }, [active, currentSong, isPlaying, lowPerformanceMode])
 
   const handleNext = () => {
     if (!playableSongs.length) return
@@ -469,9 +554,9 @@ export default function Music({ active }: { active: boolean }) {
       style={
         {
           ["--music-bg-image" as any]: `url("${currentSong.cover}")`,
-          ["--music-bg-scale" as any]: "1.12",
-          ["--music-bg-brightness" as any]: "0.54",
-          ["--music-bg-saturate" as any]: "1",
+          ["--music-bg-scale" as any]: lowPerformanceMode ? "1" : "1.12",
+          ["--music-bg-brightness" as any]: lowPerformanceMode ? "0.38" : "0.54",
+          ["--music-bg-saturate" as any]: lowPerformanceMode ? "0.72" : "1",
         } as React.CSSProperties
       }
     >
@@ -479,18 +564,33 @@ export default function Music({ active }: { active: boolean }) {
       <div className="music-vignette" />
 
       <div className="music-layout">
-        <button
-          className="music-library-trigger"
-          onClick={() => setIsLibraryOpen(true)}
-          aria-label="Abrir tracklist"
-          type="button"
-        >
-          <img
-            src="/icons/headphones.png"
-            alt=""
-            className="music-library-trigger-icon"
-          />
-        </button>
+        <div className="music-top-actions">
+          <label
+            className="music-performance-toggle"
+            title="Modo de bajo rendimiento"
+          >
+            <input
+              type="checkbox"
+              checked={lowPerformanceMode}
+              onChange={(e) => setLowPerformanceMode(e.target.checked)}
+              aria-label="Activar modo de bajo rendimiento"
+            />
+            <span className="music-performance-toggle-text">SFx OFF</span>
+          </label>
+
+          <button
+            className="music-library-trigger"
+            onClick={() => setIsLibraryOpen(true)}
+            aria-label="Abrir tracklist"
+            type="button"
+          >
+            <img
+              src="./icons/folder.png"
+              alt=""
+              className="music-library-trigger-icon"
+            />
+          </button>
+        </div>
 
         <div className="music-canvas-wrapper">
           <canvas ref={canvasRef} className="music-canvas" />
