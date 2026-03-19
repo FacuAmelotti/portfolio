@@ -771,3 +771,16 @@
   overscroll-behavior: contain;
   touch-action: pan-y;
 }
+
+@media (max-width: 640px) {
+  .experience-shell {
+    display: flex;
+    align-items: flex-start;
+       margin-top: -120px;
+  }
+
+  .experience-terminal {
+    height: 86vh;
+    min-height: 86vh;
+  }
+}

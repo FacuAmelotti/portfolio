@@ -7,6 +7,8 @@ interface NavProps {
   transitioning: boolean
 }
 
+
+
 export default function Nav({ current, sections, onNavigate, transitioning }: NavProps) {
   return (
     <nav className={`nav ${transitioning ? "is-transitioning" : ""}`}>

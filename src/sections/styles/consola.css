@@ -1,0 +1,746 @@
+/* ============================================================
+   CONSOLOA — ÉDITION PRÉCIEUSE
+   Drop-in replacement. Same class names, infinitely more soul.
+   Font imports: add to your <head>
+   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+   ============================================================ */
+
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --g:      #00ff50;
+  --g-dim:  rgba(0, 255, 80, 0.55);
+  --g-glow: rgba(0, 255, 80, 0.18);
+  --g-haze: rgba(0, 255, 80, 0.07);
+  --g-smoke:rgba(0, 255, 80, 0.03);
+  --teal:   rgba(0, 220, 200, 0.5);
+  --violet: rgba(120, 60, 255, 0.35);
+  --ink:    #020904;
+  --text:   #c6ffda;
+  --text-hi:#edfff3;
+  --r:      14px;
+  --mono:   'JetBrains Mono', 'Share Tech Mono', monospace;
+  --display:'Orbitron', var(--mono);
+}
+
+/* ── OVERLAY ─────────────────────────────────────────────── */
+.console-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 20px;
+
+  /* deep-space background */
+  background:
+    radial-gradient(ellipse 80% 55% at 50%  -5%, rgba(0,255,80,0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at  8%  90%, rgba(0,210,200,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 92%  85%, rgba(110,40,255,0.05) 0%, transparent 55%),
+    rgba(0, 0, 0, 0.97);
+  backdrop-filter: blur(8px) saturate(1.2);
+
+  /* animated grid lines */
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50%  -5%, rgba(0,255,80,0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at  8%  90%, rgba(0,210,200,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 92%  85%, rgba(110,40,255,0.05) 0%, transparent 55%),
+    linear-gradient(rgba(0,255,80,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,80,0.03) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    44px 44px,
+    44px 44px;
+  animation: gridDrift 24s linear infinite;
+}
+@keyframes gridDrift {
+  to { background-position:
+    0 0, 0 0, 0 0,
+    0 44px, 0 0;
+  }
+}
+
+/* subtle CRT scanlines on the whole overlay */
+.console-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent          0px,
+    transparent          3px,
+    rgba(0,0,0,0.13)     3px,
+    rgba(0,0,0,0.13)     4px
+  );
+  animation: scanDrift 6s linear infinite;
+  z-index: 1;
+}
+@keyframes scanDrift {
+  to { background-position: 0 100px; }
+}
+
+/* ── MODAL ───────────────────────────────────────────────── */
+.console-modal {
+  position: relative;
+  z-index: 2;
+  width: min(1100px, 100%);
+  height: min(78vh, 820px);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r);
+  overflow: hidden;
+
+  /* glass body */
+  background:
+    linear-gradient(155deg,
+      rgba(6, 18, 11, 0.98)  0%,
+      rgba(3, 10,  6, 0.99) 55%,
+      rgba(2,  7,  4, 1.00) 100%
+    );
+
+  /* stacked glow ring */
+  box-shadow:
+    0 0 0 1px  rgba(0, 255, 80, 0.22),
+    0 0 0 2px  rgba(0, 255, 80, 0.07),
+    0 0 0 3px  rgba(0, 255, 80, 0.03),
+    0 0  40px  rgba(0, 255, 80, 0.10),
+    0 0  90px  rgba(0, 255, 80, 0.05),
+    0 0 160px  rgba(0, 255, 80, 0.03),
+    0 30px 90px rgba(0, 0,  0,  0.65),
+    inset 0  1px 0 rgba(0, 255, 80, 0.18),
+    inset 0 -1px 0 rgba(0, 255, 80, 0.06),
+    inset 1px 0 0  rgba(0, 255, 80, 0.06),
+    inset -1px 0 0 rgba(0, 255, 80, 0.06);
+
+  animation: modalReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes modalReveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.96);
+    box-shadow: 0 0 0 1px rgba(0,255,80,0.05), 0 8px 30px rgba(0,0,0,0.5);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* corner accent glows — purely decorative */
+.console-modal::before,
+.console-modal::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+.console-modal::before {
+  inset: 0;
+  background:
+    radial-gradient(circle 160px at 0%   0%,   rgba(0,255,80,0.10)  0%, transparent 70%),
+    radial-gradient(circle 100px at 100% 100%,  rgba(0,190,255,0.06) 0%, transparent 70%);
+}
+.console-modal::after {
+  /* animated pulse rim — sits on the border */
+  inset: -1px;
+  border-radius: calc(var(--r) + 1px);
+  background: transparent;
+  box-shadow: 0 0 28px rgba(0,255,80,0.12);
+  animation: rimPulse 3.5s ease-in-out infinite;
+}
+@keyframes rimPulse {
+  0%,100% { box-shadow: 0 0 20px rgba(0,255,80,0.08); }
+  50%      { box-shadow: 0 0 42px rgba(0,255,80,0.20), 0 0 80px rgba(0,255,80,0.08); }
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+.console-header {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border-bottom: 1px solid rgba(0,255,80,0.13);
+  background:
+    linear-gradient(180deg,
+      rgba(0,255,80,0.055) 0%,
+      rgba(0,255,80,0.018) 100%
+    );
+}
+
+/* faint horizontal shimmer that sweeps every few seconds */
+.console-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0,255,80,0.07) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: headerShimmer 5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes headerShimmer {
+  0%   { background-position:  200% 0; opacity: 0; }
+  10%  {                                opacity: 1; }
+  90%  {                                opacity: 1; }
+  100% { background-position: -200% 0; opacity: 0; }
+}
+
+/* ── TRAFFIC LIGHTS ──────────────────────────────────────── */
+.console-header-left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.console-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+.console-dot::after {
+  /* glassy specular */
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  pointer-events: none;
+}
+.console-dot:hover { transform: scale(1.35); filter: brightness(1.4) saturate(1.3); }
+
+.console-dot-red {
+  background: radial-gradient(circle at 35% 35%, #ff8d88, #ff5f56);
+  box-shadow: 0 0  8px rgba(255,95,86,0.70),
+              0 0 18px rgba(255,95,86,0.30);
+}
+.console-dot-yellow {
+  background: radial-gradient(circle at 35% 35%, #ffe08a, #ffbd2e);
+  box-shadow: 0 0  8px rgba(255,189,46,0.65),
+              0 0 18px rgba(255,189,46,0.25);
+}
+.console-dot-green {
+  background: radial-gradient(circle at 35% 35%, #7cffa0, #27c93f);
+  box-shadow: 0 0  8px rgba(39,201,63,0.70),
+              0 0 18px rgba(39,201,63,0.30);
+  animation: greenPop 2.4s ease-in-out infinite;
+}
+@keyframes greenPop {
+  0%,100% { box-shadow: 0 0  8px rgba(39,201,63,0.70), 0 0 18px rgba(39,201,63,0.30); }
+  50%     { box-shadow: 0 0 14px rgba(39,201,63,0.95), 0 0 30px rgba(39,201,63,0.50); }
+}
+
+/* ── TITLE ───────────────────────────────────────────────── */
+.console-title {
+  font-family: var(--display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.30em;
+  text-align: center;
+  text-transform: uppercase;
+  color: transparent;
+  background: linear-gradient(
+    90deg,
+    rgba(0,255,80,0.50)  0%,
+    rgba(180,255,210,0.95) 40%,
+    rgba(0,255,80,0.95)  60%,
+    rgba(180,255,210,0.50) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-size: 200% 100%;
+  animation: titleFlow 6s ease-in-out infinite;
+  text-shadow: none; /* shadow doesn't work on transparent text */
+  filter: drop-shadow(0 0 6px rgba(0,255,80,0.55));
+}
+@keyframes titleFlow {
+  0%,100% { background-position: 0%   0; }
+  50%     { background-position: 100% 0; }
+}
+
+/* ── CLOSE BUTTON ────────────────────────────────────────── */
+.console-close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(0,255,80,0.20);
+  background: rgba(0,255,80,0.04);
+  color: rgba(180,255,210,0.80);
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: 1;
+  transition:
+    background  0.18s ease,
+    border-color 0.18s ease,
+    color        0.18s ease,
+    transform    0.18s ease,
+    box-shadow   0.18s ease;
+}
+.console-close:hover {
+  background: rgba(255,80,80,0.12);
+  border-color: rgba(255,80,80,0.45);
+  color: #ff8080;
+  transform: scale(1.12) rotate(90deg);
+  box-shadow: 0 0 14px rgba(255,80,80,0.30);
+}
+.console-close:active { transform: scale(0.96) rotate(90deg); }
+
+/* ── BODY ────────────────────────────────────────────────── */
+.console-body {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 22px;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: rgba(160,255,185,0.88);
+  line-height: 1.75;
+  overscroll-behavior: contain;
+
+  /* faint inner vignette */
+  background:
+    linear-gradient(180deg, rgba(0,255,80,0.025) 0%, transparent 60px),
+    linear-gradient(0deg,   rgba(0,255,80,0.015) 0%, transparent 40px);
+}
+
+/* custom scrollbar */
+.console-body::-webkit-scrollbar       { width: 6px; }
+.console-body::-webkit-scrollbar-track { background: rgba(0,255,80,0.03); border-radius: 999px; }
+.console-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(0,255,80,0.35), rgba(0,180,255,0.25));
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+.console-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(0,255,80,0.60), rgba(0,200,255,0.45));
+}
+
+/* ── LINES ───────────────────────────────────────────────── */
+.console-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+  animation: lineIn 0.25s ease both;
+}
+@keyframes lineIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── INPUT ROW ───────────────────────────────────────────── */
+.console-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0,255,80,0.03);
+  border: 1px solid rgba(0,255,80,0.10);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.console-input-row:focus-within {
+  border-color: rgba(0,255,80,0.32);
+  background:   rgba(0,255,80,0.06);
+  box-shadow:   0 0 18px rgba(0,255,80,0.12);
+}
+
+.console-prompt {
+  color: var(--g);
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-shadow: 0 0 10px rgba(0,255,80,0.80);
+  animation: promptBlink 1.1s step-end infinite;
+  user-select: none;
+}
+@keyframes promptBlink {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.35; }
+}
+
+.console-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-hi);
+  font: inherit;
+  font-weight: 400;
+  font-size: 0.88rem;
+  caret-color: var(--g);
+  letter-spacing: 0.02em;
+}
+.console-input::placeholder {
+  color: rgba(0,255,80,0.28);
+  font-weight: 300;
+}
+.console-input::selection {
+  background: rgba(0,255,80,0.25);
+  color: #fff;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .console-overlay {
+    padding: 14px 10px;
+    background-size:
+      100% 100%, 100% 100%, 100% 100%,
+      30px 30px, 30px 30px;
+  }
+  .console-modal {
+    height: min(82vh, 820px);
+    border-radius: 12px;
+  }
+  .console-body {
+    padding: 14px 16px;
+    font-size: 0.82rem;
+  }
+  .console-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.20em;
+  }
+  .console-dot { width: 10px; height: 10px; }
+}
+
+
+/* grid + badges  */
+.console-command-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.7rem;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.console-command-chip {
+  appearance: none;
+  border: 1px solid rgba(120, 255, 120, 0.25);
+  background: rgba(20, 40, 20, 0.55);
+  color: #9dff9d;
+  border-radius: 14px;
+  padding: 0.7rem 0.85rem;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-height: 72px;
+}
+
+.console-command-chip:hover {
+  transform: translateY(-2px);
+  border-color: rgba(120, 255, 120, 0.45);
+  background: rgba(28, 60, 28, 0.72);
+  box-shadow: 0 0 14px rgba(120, 255, 120, 0.08);
+}
+
+.console-command-chip:active {
+  transform: scale(0.985);
+}
+
+.console-command-chip-label {
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1.1;
+}
+
+.console-command-chip-description {
+  font-size: 0.72rem;
+  line-height: 1.3;
+  opacity: 0.78;
+}
+
+.console-inline-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.console-inline-chip {
+  appearance: none;
+  border: 1px solid rgba(120, 255, 120, 0.28);
+  background: rgba(20, 40, 20, 0.55);
+  color: #9dff9d;
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    transform 0.14s ease,
+    background 0.14s ease,
+    border-color 0.14s ease;
+}
+
+.console-inline-chip:hover {
+  transform: translateY(-1px);
+  background: rgba(28, 60, 28, 0.72);
+  border-color: rgba(120, 255, 120, 0.45);
+}
+
+.console-inline-chip:active {
+  transform: scale(0.98);
+}
+
+
+/* variants  */
+
+/* ================================================================
+   is-danger — ÉDITION PRÉCIEUSE
+   ================================================================ */
+
+.console-command-chip.is-danger {
+  color: #ffaaaa;
+  border-color: rgba(255, 80, 80, 0.22);
+  background: rgba(40, 10, 10, 0.75);
+  font-weight: 600;
+  letter-spacing: 0.10em;
+
+  text-shadow:
+    0 0  6px rgba(255, 80,  80, 0.80),
+    0 0 14px rgba(255, 40,  40, 0.40),
+    0 0 28px rgba(255,  0,   0, 0.20);
+
+  box-shadow:
+    inset 0  1px 0 rgba(255, 120, 120, 0.12),
+    inset 0 -1px 0 rgba(255,  40,  40, 0.08),
+    0 0  10px rgba(255,  60,  60, 0.15),
+    0 0  24px rgba(255,  40,  40, 0.08);
+
+  animation: dangerBreath 2.8s ease-in-out infinite;
+}
+
+@keyframes dangerBreath {
+  0%, 100% {
+    box-shadow:
+      inset 0  1px 0 rgba(255, 120, 120, 0.12),
+      inset 0 -1px 0 rgba(255,  40,  40, 0.08),
+      0 0  10px rgba(255, 60, 60, 0.15),
+      0 0  24px rgba(255, 40, 40, 0.08);
+  }
+  50% {
+    box-shadow:
+      inset 0  1px 0 rgba(255, 120, 120, 0.18),
+      inset 0 -1px 0 rgba(255,  40,  40, 0.12),
+      0 0  18px rgba(255, 60, 60, 0.32),
+      0 0  40px rgba(255, 40, 40, 0.16),
+      0 0  70px rgba(255,  0,  0, 0.07);
+  }
+}
+
+/* diagonal hatching — como peligro industrial */
+.console-command-chip.is-danger::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    -52deg,
+    transparent              0px,
+    transparent              7px,
+    rgba(255, 50, 50, 0.04)  7px,
+    rgba(255, 50, 50, 0.04)  8px
+  );
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+
+/* ── HOVER ── */
+.console-command-chip.is-danger:hover {
+  color: #ffcccc;
+  border-color: rgba(255, 80, 80, 0.55);
+  background: rgba(58, 12, 12, 0.92);
+  transform: translateY(-2px) scale(1.05);
+  animation: dangerShake 0.25s linear infinite;
+
+  text-shadow:
+    0 0  8px rgba(255, 100, 100, 1.00),
+    0 0 18px rgba(255,  60,  60, 0.60),
+    0 0 36px rgba(255,  20,  20, 0.30);
+
+  box-shadow:
+    inset 0  1px 0 rgba(255, 140, 140, 0.20),
+    inset 0 -1px 0 rgba(255,  60,  60, 0.15),
+    0 0  24px rgba(255,  60,  60, 0.40),
+    0 0  50px rgba(255,  40,  40, 0.20),
+    0 0  90px rgba(255,   0,   0, 0.10);
+}
+
+@keyframes dangerShake {
+  0%   { transform: translateY(-2px) scale(1.05) translateX(0); }
+  25%  { transform: translateY(-2px) scale(1.05) translateX(-2px) rotate(-0.4deg); }
+  50%  { transform: translateY(-2px) scale(1.05) translateX( 2px) rotate( 0.4deg); }
+  75%  { transform: translateY(-2px) scale(1.05) translateX(-1px); }
+  100% { transform: translateY(-2px) scale(1.05) translateX(0); }
+}
+
+/* ── ACTIVE ── */
+.console-command-chip.is-danger:active {
+  transform: scale(0.96);
+  animation: none;
+  box-shadow:
+    inset 0 2px 6px rgba(255, 40, 40, 0.30),
+    0 0 12px rgba(255, 60, 60, 0.25);
+}
+
+/* ================================================================
+   is-music — COLOR SHIFT EDITION
+   ================================================================ */
+
+.console-command-chip.is-music {
+  color: #ffab66;
+  border-color: rgba(255, 171, 102, 0.20);
+  background: rgba(51, 28, 12, 0.62);
+  box-shadow:
+    0 0 12px rgba(255, 140, 60, 0.08),
+    inset 0 1px 0 rgba(255, 180, 100, 0.07);
+  animation:
+    musicBreath  2.4s ease-in-out infinite,
+    musicColor   8s   ease-in-out infinite;
+}
+
+@keyframes musicColor {
+  0%, 100% {
+    color: #ffab66;
+    text-shadow: 0 0 8px rgba(255, 171, 102, 0.38);
+    border-color: rgba(255, 171, 102, 0.22);
+    background: rgba(51, 28, 12, 0.62);
+  }
+  33% {
+    color: #ff9dce;
+    text-shadow: 0 0 8px rgba(255, 157, 206, 0.42);
+    border-color: rgba(255, 157, 206, 0.22);
+    background: rgba(48, 18, 34, 0.62);
+  }
+  66% {
+    color: #7ee8ff;
+    text-shadow: 0 0 8px rgba(126, 232, 255, 0.42);
+    border-color: rgba(126, 232, 255, 0.22);
+    background: rgba(12, 36, 46, 0.62);
+  }
+}
+
+@keyframes musicBreath {
+  0%, 100% {
+    box-shadow:
+      0 0 10px rgba(255, 140, 60, 0.07),
+      inset 0 1px 0 rgba(255, 180, 100, 0.07);
+  }
+  50% {
+    box-shadow:
+      0 0 18px rgba(255, 150, 70, 0.18),
+      0 0 36px rgba(255, 120, 40, 0.07),
+      inset 0 1px 0 rgba(255, 180, 100, 0.12);
+  }
+}
+
+@keyframes musicArcColor {
+  0%, 100% {
+    background: conic-gradient(
+      from 0deg,
+      transparent                  0deg,
+      transparent                150deg,
+      rgba(255, 171, 102, 0.00) 165deg,
+      rgba(255, 171, 102, 0.75) 180deg,
+      rgba(255, 210, 160, 0.95) 190deg,
+      rgba(255, 171, 102, 0.75) 200deg,
+      rgba(255, 171, 102, 0.00) 215deg,
+      transparent               230deg,
+      transparent               360deg
+    );
+  }
+  33% {
+    background: conic-gradient(
+      from 0deg,
+      transparent                  0deg,
+      transparent                150deg,
+      rgba(255, 157, 206, 0.00) 165deg,
+      rgba(255, 157, 206, 0.75) 180deg,
+      rgba(255, 200, 230, 0.95) 190deg,
+      rgba(255, 157, 206, 0.75) 200deg,
+      rgba(255, 157, 206, 0.00) 215deg,
+      transparent               230deg,
+      transparent               360deg
+    );
+  }
+  66% {
+    background: conic-gradient(
+      from 0deg,
+      transparent                  0deg,
+      transparent                150deg,
+      rgba(126, 232, 255, 0.00) 165deg,
+      rgba(126, 232, 255, 0.75) 180deg,
+      rgba(190, 245, 255, 0.95) 190deg,
+      rgba(126, 232, 255, 0.75) 200deg,
+      rgba(126, 232, 255, 0.00) 215deg,
+      transparent               230deg,
+      transparent               360deg
+    );
+  }
+}
+
+.console-command-chip.is-music::after { display: none; }
+
+/* ── HOVER ── */
+.console-command-chip.is-music:hover {
+  transform: translateY(-2px) scale(1.04);
+  animation:
+    musicBreath  1.2s ease-in-out infinite,
+    musicColor   8s   ease-in-out infinite;
+}
+
+.console-command-chip.is-music:hover::before {
+  animation:
+    musicArc      1.5s linear      infinite,
+    musicArcColor 8s   ease-in-out infinite;
+}
+
+/* ── ACTIVE ── */
+.console-command-chip.is-music:active {
+  transform: scale(0.97);
+  animation: musicColor 8s ease-in-out infinite;
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.25),
+    0 0 8px rgba(255, 140, 60, 0.10);
+}
+
+.console-input::after {
+  content: "|";
+  margin-left: 4px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0 }
+}

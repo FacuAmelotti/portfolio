@@ -1,6 +1,23 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { songs } from "../data/songs"
 import "./styles/music.css"
+
+type SongCategory = "favorites" | "others" | "beats" | "nostalgias"
+
+type SongItem = {
+  title: string
+  subtitle?: string
+  description: string
+  cover: string
+  audio?: string
+  glowInner?: string
+  glowMid?: string
+  dots?: number
+  dotSize?: number
+  dotColor?: string
+  rotationSpeed?: number
+  category?: SongCategory
+}
 
 export default function Music({ active }: { active: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -12,13 +29,64 @@ export default function Music({ active }: { active: boolean }) {
   const frequencyDataRef = useRef<Uint8Array<ArrayBuffer> | null>(null)
   const beatLevelRef = useRef(0)
 
-  const [currentSongIndex, setCurrentSongIndex] = useState(0)
-  const [isPlaying, setIsPlaying] = useState(false)
+  const allSongs = songs as SongItem[]
 
-  const currentSong = songs[currentSongIndex]
+  const favoriteSongs = useMemo(
+    () => allSongs.filter((song) => (song.category ?? "favorites") === "favorites"),
+    [allSongs]
+  )
+
+  const otherSongs = useMemo(
+    () => allSongs.filter((song) => song.category === "others"),
+    [allSongs]
+  )
+
+  const beatSongs = useMemo(
+    () => allSongs.filter((song) => song.category === "beats"),
+    [allSongs]
+  )
+
+  const nostalgiaSongs = useMemo(
+    () => allSongs.filter((song) => song.category === "nostalgias"),
+    [allSongs]
+  )
+
+  const playableSongs = useMemo(
+    () =>
+      allSongs.filter((song) => {
+        const category = song.category ?? "favorites"
+        return category === "favorites" || category === "others"
+      }),
+    [allSongs]
+  )
+
+  const initialSong = playableSongs[0] ?? allSongs[0]
+
+  const [currentSong, setCurrentSong] = useState<SongItem>(initialSong)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false)
+
+  const currentSongIndexInAll = useMemo(
+    () => allSongs.findIndex((song) => song === currentSong),
+    [allSongs, currentSong]
+  )
+
+  const currentPlayableIndex = useMemo(
+    () => playableSongs.findIndex((song) => song === currentSong),
+    [playableSongs, currentSong]
+  )
+
+  const isCurrentSongPlayable = currentPlayableIndex !== -1
 
   useEffect(() => {
-    if (!currentSong.audio) return
+    document.body.classList.add("music-page")
+    return () => {
+      document.body.classList.remove("music-page")
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!currentSong?.audio) return
 
     let cancelled = false
 
@@ -54,6 +122,7 @@ export default function Music({ active }: { active: boolean }) {
         }
 
         const audioContext = audioContextRef.current
+
         if (audioContext) {
           const analyser = audioContext.createAnalyser()
           analyser.fftSize = 512
@@ -66,7 +135,6 @@ export default function Music({ active }: { active: boolean }) {
           analyserRef.current = analyser
           sourceRef.current = source
           frequencyDataRef.current = new Uint8Array(analyser.frequencyBinCount) as Uint8Array<ArrayBuffer>
-            //frequencyDataRef.current = new Uint8Array(analyser.frequencyBinCount) as Uint8Array<ArrayBuffer>
         }
       } catch {
         analyserRef.current = null
@@ -91,21 +159,25 @@ export default function Music({ active }: { active: boolean }) {
 
     return () => {
       cancelled = true
+
       if (audioRef.current) {
         audioRef.current.pause()
       }
+
       if (sourceRef.current) {
         sourceRef.current.disconnect()
         sourceRef.current = null
       }
+
       if (analyserRef.current) {
         analyserRef.current.disconnect()
         analyserRef.current = null
       }
+
       frequencyDataRef.current = null
       beatLevelRef.current = 0
     }
-  }, [currentSongIndex])
+  }, [currentSong, isPlaying])
 
   useEffect(() => {
     if (!active) {
@@ -115,6 +187,34 @@ export default function Music({ active }: { active: boolean }) {
       setIsPlaying(false)
     }
   }, [active])
+
+  useEffect(() => {
+    if (!isLibraryOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    const previousTouchAction = document.body.style.touchAction
+
+    document.body.style.overflow = "hidden"
+    document.body.style.touchAction = "none"
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.body.style.touchAction = previousTouchAction
+    }
+  }, [isLibraryOpen])
+
+  useEffect(() => {
+    if (!isLibraryOpen) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsLibraryOpen(false)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [isLibraryOpen])
 
   const togglePlay = async () => {
     if (!audioRef.current) return
@@ -201,7 +301,6 @@ export default function Music({ active }: { active: boolean }) {
 
       const beat = getBeatLevel()
 
-      // MÁS EXAGERADO
       const bgPulse = 1 + beat * 0.55
       const circlePulse = 1 + beat * 0.7 + Math.sin(time * 2.4) * 0.05
 
@@ -216,12 +315,11 @@ export default function Music({ active }: { active: boolean }) {
       const cy = h / 2
       const radius = Math.min(w, h) * 0.38
 
-     const outerRadius = (radius + 16) * (1 + beat * 0.28)
+      const outerRadius = (radius + 16) * (1 + beat * 0.28)
       const mainRadius = radius * circlePulse
       const innerRadius = radius * 0.68 * (1 + beat * 0.38)
       const innerRadius2 = radius * 0.46 * (1 + beat * 0.5)
 
-      // glow central
       const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 1.05 * (1 + beat * 0.28))
       gradient.addColorStop(0, currentSong.glowInner ?? "rgba(255,180,60,0.12)")
       gradient.addColorStop(0.45, currentSong.glowMid ?? "rgba(255,120,20,0.05)")
@@ -232,21 +330,18 @@ export default function Music({ active }: { active: boolean }) {
       ctx.fillStyle = gradient
       ctx.fill()
 
-      // aro exterior
       ctx.beginPath()
       ctx.arc(cx, cy, outerRadius, 0, Math.PI * 2)
       ctx.strokeStyle = `rgba(255,255,255,${0.08 + beat * 0.18})`
       ctx.lineWidth = 2 + beat * 1.8
       ctx.stroke()
 
-      // aro principal
       ctx.beginPath()
       ctx.arc(cx, cy, mainRadius, 0, Math.PI * 2)
       ctx.strokeStyle = `rgba(255,255,255,${0.2 + beat * 0.28})`
       ctx.lineWidth = 1.5 + beat * 2
       ctx.stroke()
 
-      // aro punteado 1
       const dots = currentSong.dots ?? 96
       for (let i = 0; i < dots; i++) {
         const angle = (i / dots) * Math.PI * 2 + time * (currentSong.rotationSpeed ?? 0.15)
@@ -259,7 +354,6 @@ export default function Music({ active }: { active: boolean }) {
         ctx.fill()
       }
 
-      // aro punteado 2
       const dots2 = Math.floor((currentSong.dots ?? 96) * 0.5)
       for (let i = 0; i < dots2; i++) {
         const angle = (i / dots2) * Math.PI * 2 - time * ((currentSong.rotationSpeed ?? 0.15) * 1.7)
@@ -272,9 +366,8 @@ export default function Music({ active }: { active: boolean }) {
         ctx.fill()
       }
 
-      // núcleo
       ctx.beginPath()
-     ctx.arc(cx, cy, radius * 0.08 * (1 + beat * 1.5), 0, Math.PI * 2)  // era 0.75
+      ctx.arc(cx, cy, radius * 0.08 * (1 + beat * 1.5), 0, Math.PI * 2)
       ctx.fillStyle = `rgba(255,255,255,${0.9 + beat * 0.1})`
       ctx.fill()
 
@@ -292,11 +385,82 @@ export default function Music({ active }: { active: boolean }) {
   }, [active, currentSong, isPlaying])
 
   const handleNext = () => {
-    setCurrentSongIndex((prev) => (prev + 1) % songs.length)
+    if (!playableSongs.length) return
+
+    if (!isCurrentSongPlayable) {
+      setCurrentSong(playableSongs[0])
+      return
+    }
+
+    setCurrentSong(playableSongs[(currentPlayableIndex + 1) % playableSongs.length])
   }
 
   const handlePrev = () => {
-    setCurrentSongIndex((prev) => (prev - 1 + songs.length) % songs.length)
+    if (!playableSongs.length) return
+
+    if (!isCurrentSongPlayable) {
+      setCurrentSong(playableSongs[playableSongs.length - 1])
+      return
+    }
+
+    setCurrentSong(
+      playableSongs[(currentPlayableIndex - 1 + playableSongs.length) % playableSongs.length]
+    )
+  }
+
+  const handleSelectSong = (song: SongItem) => {
+    setCurrentSong(song)
+    setIsLibraryOpen(false)
+  }
+
+  const renderSongSection = (
+    title: string,
+    items: SongItem[],
+    categoryClassName: string
+  ) => {
+    if (!items.length) return null
+
+    return (
+      <div className={`music-library-section ${categoryClassName}`}>
+        <div className="music-library-section-header">
+          <h4 className="music-library-section-title">{title}</h4>
+          <span className="music-library-section-count">
+            {String(items.length).padStart(2, "0")}
+          </span>
+        </div>
+
+        <div className="music-library-list">
+          {items.map((song) => {
+            const songIndex = allSongs.findIndex((item) => item === song)
+            const isActive = song === currentSong
+
+            return (
+              <button
+                key={`${song.title}-${songIndex}`}
+                type="button"
+                className={`music-song-card ${isActive ? "active" : ""}`}
+                onClick={() => handleSelectSong(song)}
+              >
+                <div className="music-song-card-cover">
+                  <img src={song.cover} alt={song.title} />
+                </div>
+
+                <div className="music-song-card-info">
+                  <div className="music-song-card-title">{song.title}</div>
+                  <div className="music-song-card-genre">
+                    {song.subtitle ?? title}
+                  </div>
+                </div>
+
+                <div className="music-song-card-index">
+                  {String(songIndex + 1).padStart(2, "0")}
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -315,6 +479,19 @@ export default function Music({ active }: { active: boolean }) {
       <div className="music-vignette" />
 
       <div className="music-layout">
+        <button
+          className="music-library-trigger"
+          onClick={() => setIsLibraryOpen(true)}
+          aria-label="Abrir tracklist"
+          type="button"
+        >
+          <img
+            src="/icons/headphones.png"
+            alt=""
+            className="music-library-trigger-icon"
+          />
+        </button>
+
         <div className="music-canvas-wrapper">
           <canvas ref={canvasRef} className="music-canvas" />
         </div>
@@ -331,42 +508,114 @@ export default function Music({ active }: { active: boolean }) {
 
             <p className="music-desc">{currentSong.description}</p>
 
-           <div className="music-bottom">
-             <div className="music-controls">
-               <button className="btn btn-ghost" onClick={handlePrev}></button>
+            <div className="music-bottom">
+              <div className="music-controls">
+                <button
+                  className="btn btn-ghost"
+                  onClick={handlePrev}
+                  aria-label="Canción anterior"
+                  type="button"
+                />
 
-               <button className="btn btn-primary" onClick={togglePlay}>
-                 {isPlaying ? "⏸" : "▶"}
-               </button>
+                <button
+                  className={`btn btn-primary ${isPlaying ? "playing" : ""}`}
+                  onClick={togglePlay}
+                  aria-label={isPlaying ? "Pausar canción" : "Reproducir canción"}
+                  type="button"
+                >
+                  {isPlaying ? "⏸" : "▶"}
+                </button>
 
-               <button className="btn btn-ghost" onClick={handleNext}></button>
-             </div>
+                <button
+                  className="btn btn-ghost"
+                  onClick={handleNext}
+                  aria-label="Siguiente canción"
+                  type="button"
+                />
+              </div>
 
-             <div className="music-donate-wrap">
-               <a
-                 className="music-donate-btn"
-                 href="https://link.mercadopago.com.ar/hornerito"
-                 target="_blank"
-                 rel="noreferrer"
-               >
-                 <span className="music-donate-icon">◎</span>
-                 <span className="music-donate-text">Apoyar proyecto</span>
-               </a>
-             </div>
+              <div className="music-donate-wrap">
+                <a
+                  className="music-donate-btn"
+                  href="https://link.mercadopago.com.ar/hornerito"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span className="music-donate-icon">◎</span>
+                  <span className="music-donate-text">Apoyar proyecto</span>
+                </a>
+              </div>
 
-             <div className="music-meta">
-               <span className="music-meta-current">
-                 {String(currentSongIndex + 1).padStart(2, "0")}
-               </span>
-               <span className="music-meta-sep">/</span>
-               <span className="music-meta-total">
-                 {String(songs.length).padStart(2, "0")}
-               </span>
-             </div>
-           </div>
+              <div className="music-meta">
+                {isCurrentSongPlayable ? (
+                  <>
+                    <span className="music-meta-current">
+                      {String(currentPlayableIndex + 1).padStart(2, "0")}
+                    </span>
+                    <span className="music-meta-sep">/</span>
+                    <span className="music-meta-total">
+                      {String(playableSongs.length).padStart(2, "0")}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="music-meta-current">
+                      {String(currentSongIndexInAll + 1).padStart(2, "0")}
+                    </span>
+                    <span className="music-meta-sep">•</span>
+                    <span className="music-meta-total">
+                      {(currentSong.category ?? "favorites").toUpperCase()}
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {isLibraryOpen && (
+        <div
+          className="music-library-overlay"
+          onClick={() => setIsLibraryOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="music-library-title"
+        >
+          <div
+            className="music-library-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="music-library-header">
+              <div>
+                <h3 id="music-library-title" className="music-library-title">
+                  Tracklist
+                </h3>
+              </div>
+
+              <button
+                className="music-library-close"
+                onClick={() => setIsLibraryOpen(false)}
+                aria-label="Cerrar tracklist"
+                type="button"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div
+              className="music-library-grid"
+              onWheel={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
+            >
+              {renderSongSection("Favoritas", favoriteSongs, "favorites")}
+              {renderSongSection("Otras", otherSongs, "others")}
+              {renderSongSection("Beats", beatSongs, "beats")}
+              {renderSongSection("Nostalgias", nostalgiaSongs, "nostalgias")}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
