@@ -10,318 +10,381 @@ export const techTree: TechFolder[] = [
           {
             name: "java_core.txt",
             content: `
-Java es una de mis tecnologías backend principales.
+              Java es una de mis bases más sólidas para backend.
 
-La utilicé para construir APIs, lógica de negocio, servicios por capas
-y estructuras más cercanas a entornos profesionales reales.
+              Es el lenguaje con el que más trabajé en entornos cercanos a producción,
+              con foco en estructura, mantenibilidad y lógica de negocio real.
 
-Experiencia:
-• Programación orientada a objetos
-• Collections, streams y manejo de datos
-• Diseño por capas
-• DTOs, services, controllers, repositories
-• Manejo de errores
-• Integración con frameworks empresariales
+              Qué hago con Java:
+              • Construyo APIs y servicios backend
+              • Diseño lógica por capas (controller / service / repository)
+              • Manejo DTOs y separación de responsabilidades
+              • Trabajo con colecciones, streams y transformaciones de datos
+              • Implemento manejo de errores consistente
 
-Lo usé especialmente en:
-- APIs de tipo fintech
-- backends de juegos
-- servicios con autenticación
-- proyectos con arquitectura modular
-`
+              Dónde lo usé:
+              - APIs tipo fintech (wallet, usuarios, autenticación)
+              - backends de juegos (cuentas, lógica, sistemas)
+              - servicios modulares con múltiples dominios
+
+              Mi enfoque:
+              No uso Java solo para que funcione,
+              lo uso para que el sistema tenga estructura, escalabilidad y orden.
+          `
           },
           {
             name: "spring_boot.txt",
             content: `
-Spring Boot es mi framework principal para backend profesional.
+              Spring Boot hoy en dia es mi stack principal para backend profesional.
 
-Con Spring Boot construí APIs REST robustas, seguras y organizadas,
-siguiendo buenas prácticas de arquitectura y separación de responsabilidades.
+              Es donde realmente consolido arquitectura, seguridad y buenas prácticas.
 
-Experiencia:
-• REST APIs
-• Controllers, services y repositories
-• Validaciones
-• JWT authentication
-• Configuración por properties / YAML
-• Manejo global de errores
-• Integración con MySQL y MongoDB
-• Seguridad y middlewares
-• Estructura escalable
+              Qué hago con Spring:
+              • Construyo APIs REST completas
+              • Organizo código en controllers, services y repositories
+              • Implemento validaciones y manejo global de errores
+              • Configuro seguridad con JWT
+              • Manejo configuración con properties / YAML
+              • Integro bases de datos (MySQL, MongoDB)
 
-Proyectos relacionados:
-- Bricks APIs
-- servicios de autenticación
-- backends administrativos
-- Valdoria backend
-`
+              Dónde lo apliqué:
+              - APIs de Bricks (entorno fintech real)
+              - sistemas de autenticación
+              - backends administrativos
+              - proyectos propios como Valdoria
+
+              Mi diferencial:
+              No hago solo endpoints.
+              Diseño sistemas que pueden crecer, mantenerse y escalar.
+          `
           },
           {
             name: "security_jwt.txt",
             content: `
-Tengo experiencia implementando autenticación y autorización con JWT.
+              Tengo experiencia real implementando autenticación con JWT.
 
-Capacidades:
-• Access token + refresh token
-• Rotación de refresh tokens
-• Middleware de autenticación
-• Protección por roles y permisos
-• Rutas privadas
-• Seguridad para paneles de administración
-• Validación de sesión
-• Flujos seguros de login / logout
+              No solo utilizo JWT, sino que entiendo el flujo completo de seguridad.
 
-Lo apliqué en:
-- starter kits backend
-- paneles administrativos
-- APIs con roles
-- sistemas con perfil de usuario
-`
+              Qué implemento:
+              • Access tokens + refresh tokens
+              • Rotación de refresh tokens
+              • Middleware de autenticación
+              • Protección por roles y permisos
+              • Rutas privadas y administrativas
+              • Control de sesión y logout seguro
+
+              Dónde lo usé:
+              - starter kits backend
+              - paneles administrativos
+              - APIs con roles (user, admin, etc.)
+
+              Mi enfoque:
+              La seguridad no es un extra. Es parte del diseño del sistema desde el inicio.
+          `
           },
           {
-            name: "rest_apis.txt",
-            content: `
-El diseño de APIs REST es una parte central de mi perfil técnico.
+                    name: "rest_apis.txt",
+                    content: `
+          El diseño de APIs REST es una parte central de mi perfil.
 
-Experiencia:
-• Diseño de endpoints
-• Contratos request / response
-• Manejo de códigos HTTP
-• Paginación, filtros y búsqueda
-• Rutas administrativas
-• CRUD completos
-• Integración con frontend
-• Documentación pensada para consumo real
+          No construyo endpoints aislados, diseño contratos claros y consistentes.
 
-Objetivo:
-Construir APIs claras, mantenibles y preparadas para crecer.
-`
-          },
-          {
-            name: "microservices.txt",
-            content: `
-Tengo especial interés en arquitecturas desacopladas y microservicios.
+          Qué trabajo:
+          • Diseño de endpoints y recursos
+          • Contratos request / response bien definidos
+          • Uso correcto de códigos HTTP
+          • Paginación, filtros y búsqueda
+          • CRUD completos y rutas administrativas
+          • Integración fluida con frontend
 
-Experiencia / enfoque:
-• separación por dominio
-• servicios independientes
-• integración entre APIs
-• autenticación distribuida
-• diseño modular
-• intercambio de datos entre sistemas
-• enfoque en escalabilidad y mantenibilidad
+          Dónde lo apliqué:
+          - APIs administrativas
+          - sistemas de usuarios
+          - plataformas con múltiples entidades
 
-Este enfoque aparece mucho en proyectos relacionados con:
-- fintech
-- wallet / fraud / user APIs
-- plataformas con múltiples dominios
-`
-          },
-          {
-            name: "architecture_patterns.txt",
-            content: `
-Me interesa mucho la arquitectura de software.
+          Mi enfoque:
+          APIs claras, mantenibles y pensadas para ser consumidas en escenarios reales.
+          `
+                  },
+                  {
+                    name: "microservices.txt",
+                    content: `
+          Tengo fuerte interés en arquitecturas desacopladas y microservicios.
 
-Patrones y conceptos con los que trabajo:
-• arquitectura por capas
-• separación de responsabilidades
-• DTO / mapper / service pattern
-• modularidad
-• dominio y subdominios
-• escalabilidad
-• mantenibilidad
-• consistencia entre backend y frontend
+          Es un enfoque que vengo aplicando en sistemas reales.
 
-No me interesa solo que el código funcione:
-también busco que tenga estructura y futuro.
-`
-          }
-        ]
-      },
-      {
-        name: "nodejs",
-        children: [
-          {
-            name: "nodejs.txt",
-            content: `
-Node.js fue una de mis tecnologías importantes en desarrollo fullstack y APIs.
+          Qué trabajo:
+          • separación por dominio
+          • servicios independientes
+          • comunicación entre APIs
+          • autenticación distribuida
+          • diseño modular
 
-Lo utilicé para:
-• construir APIs
-• herramientas internas
-• automatizaciones
-• proyectos web
-• integraciones con frontend
+          Dónde aparece:
+          - fintech (wallet, user, fraud APIs)
+          - sistemas con múltiples servicios
+          - plataformas escalables
 
-Me resulta útil especialmente para iterar rápido
-y para proyectos donde la velocidad de desarrollo importa mucho.
-`
-          },
-          {
-            name: "express.txt",
-            content: `
-Express me permitió construir APIs de forma simple y flexible.
+          Mi enfoque:
+          Dividir el sistema correctamente para que pueda crecer sin romperse.
+          `
+                  },
+                  {
+                    name: "architecture_patterns.txt",
+                    content: `
+          La arquitectura es una de las partes que más cuido en backend.
 
-Experiencia:
-• rutas organizadas por dominio
-• middlewares
-• autenticación
-• validaciones
-• integración con MySQL y MongoDB
-• endpoints administrativos
-• lógica de negocio
+          No me interesa solo que el código funcione,
+          me interesa que tenga sentido a largo plazo.
 
-Lo usé bastante en proyectos de práctica real y productos propios.
-`
-          }
-        ]
-      },
-      {
-        name: "python",
-        children: [
-          {
-            name: "python.txt",
-            content: `
-Python me sirve como lenguaje versátil para scripts, automatización,
-herramientas auxiliares y exploración técnica.
+          Qué aplico:
+          • arquitectura por capas
+          • separación de responsabilidades
+          • DTO / mapper / service pattern
+          • modularidad por dominio
+          • consistencia estructural
 
-Lo valoro por:
-• rapidez de desarrollo
-• sintaxis clara
-• automatización
-• prototipado
-• utilidades técnicas
-`
-          }
+          Mi enfoque:
+          Código claro, mantenible y preparado para evolucionar.
+          `
+                  }
+                ]
+              },
+
+              {
+                name: "nodejs",
+                children: [
+                  {
+                    name: "nodejs.txt",
+                    content: `
+          Node.js fue clave en mi etapa fullstack y en proyectos rápidos.
+
+          Lo uso cuando necesito velocidad de desarrollo sin perder estructura.
+
+          Qué hago con Node:
+          • construyo APIs
+          • desarrollo herramientas internas
+          • automatizo procesos
+          • conecto frontend rápidamente
+
+          Dónde lo usé:
+          - proyectos web propios
+          - herramientas internas
+          - APIs de práctica real
+
+          Mi enfoque:
+          Elegir Node cuando la velocidad y flexibilidad son prioridad.
+          `
+                  },
+                  {
+                    name: "express.txt",
+                    content: `
+          Express me permitió construir APIs simples pero bien organizadas.
+
+          Qué trabajo:
+          • rutas organizadas por dominio
+          • middlewares
+          • autenticación
+          • validaciones
+          • integración con bases de datos
+
+          Dónde lo usé:
+          - APIs fullstack
+          - proyectos propios
+          - sistemas con frontend conectado
+
+          Mi enfoque:
+          Mantener simple lo simple, sin perder orden ni claridad.
+          `
+                  }
+                ]
+              },
+
+              {
+                name: "python",
+                children: [
+                  {
+                    name: "python.txt",
+                    content: `
+          Python lo uso como herramienta complementaria.
+
+          No es mi stack principal, pero es muy útil para resolver rápido.
+
+          Qué hago con Python:
+          • scripts
+          • automatización
+          • herramientas auxiliares
+          • prototipos técnicos
+
+          Mi enfoque:
+          Usarlo donde aporta velocidad y practicidad.
+          `
+                  }
         ]
       }
     ]
   },
 
-  {
-    name: "frontend",
-    children: [
-      {
-        name: "react",
-        children: [
-          {
-            name: "react.tsx",
-            content: `
-React es hoy una de mis principales tecnologías para frontend moderno.
+{
+  name: "frontend",
+  children: [
+    {
+      name: "react",
+      children: [
+        {
+          name: "react.tsx",
+          content: `
+React es una de mis tecnologías principales para construir frontend moderno.
 
-Lo uso para construir:
-• interfaces modulares
-• páginas administrativas
-• dashboards
-• landing pages
-• sistemas con componentes reutilizables
-• experiencias interactivas
+Es donde más cómodo me siento cuando necesito interfaces modulares,
+componentes reutilizables y experiencias más dinámicas.
 
-Capacidades:
-• componentización
-• props / state
-• hooks
-• composición de UI
-• manejo de eventos
-• integración con APIs
-• diseño escalable
+Qué hago con React:
+• construyo interfaces por componentes
+• organizo pantallas complejas sin perder claridad
+• manejo estado, eventos y flujos de usuario
+• conecto frontend con APIs reales
+• desarrollo dashboards, paneles y landing pages
+
+Dónde lo apliqué:
+- portfolios modernos
+- paneles administrativos
+- interfaces para productos propios
+- experiencias web más interactivas
+
+Mi enfoque:
+No uso React solo para armar pantallas.
+Lo uso para construir interfaces escalables, limpias y con lógica bien pensada.
 `
-          },
-          {
-            name: "typescript.ts",
-            content: `
-TypeScript mejoró mucho mi forma de construir frontend y backend.
+        },
+        {
+          name: "typescript.ts",
+          content: `
+TypeScript mejoró mucho mi forma de trabajar tanto en frontend como en backend.
 
-Ventajas que aprovecho:
+Me ayuda a construir con más claridad, menos errores y mejor mantenibilidad.
+
+Qué valoro de TypeScript:
 • tipado explícito
-• mayor mantenibilidad
-• contratos más claros
-• menos errores por estructura
-• mejor escalabilidad en componentes y datos
+• contratos más claros entre componentes y datos
+• detección temprana de errores
+• mejor organización en proyectos grandes
+• escalabilidad del código
 
-Lo uso especialmente en:
-- React
-- frontends administrativos
+Dónde lo uso más:
+- proyectos con React
+- interfaces administrativas
 - portfolios modernos
 - herramientas con datos estructurados
-`
-          },
-          {
-            name: "ui_architecture.txt",
-            content: `
-Me gusta diseñar interfaces con estructura real, no solo pantallas lindas.
 
-En frontend suelo trabajar con:
+Mi enfoque:
+TypeScript no es solo “tipar por tipar”.
+Lo uso para que el código sea más sólido, más legible y más confiable.
+`
+        },
+        {
+          name: "ui_architecture.txt",
+          content: `
+Me interesa mucho la arquitectura de interfaces.
+
+No me gusta hacer pantallas sueltas:
+prefiero construir frontend con estructura, consistencia y criterio.
+
+Qué trabajo en UI:
 • separación por secciones y componentes
 • componentes reutilizables
-• modales, paneles, cards, tablas
-• diseño responsivo
-• flujos claros para usuario
-• consistencia visual
-• dark mode / themes
+• modales, paneles, cards y tablas
+• flujos claros para el usuario
+• consistencia visual entre vistas
+• diseño responsive
+• themes y dark mode
 
-Busco que el frontend se sienta como producto, no como maqueta.
+Mi enfoque:
+Busco que el frontend se sienta como un producto real,
+no como una maqueta armada solo para mostrar.
 `
-          }
-        ]
-      },
-      {
-        name: "vue",
-        children: [
-          {
-            name: "vue.txt",
-            content: `
-También tengo experiencia con Vue.
+        }
+      ]
+    },
+    {
+      name: "vue",
+      children: [
+        {
+          name: "vue.txt",
+          content: `
+También tengo experiencia trabajando con Vue.
 
-Lo utilicé para:
+Lo usé sobre todo en vistas conectadas al backend,
+interfaces administrativas y pantallas con lógica de datos.
+
+Qué hice con Vue:
 • vistas administrativas
-• páginas conectadas al backend
 • formularios
-• vistas con integración de datos
-• sistemas con Composition API
+• integración con APIs
+• pantallas conectadas a backend
+• uso de Composition API
+• estructuras de frontend claras y mantenibles
 
-Me gusta su claridad y la velocidad con la que permite construir UI.
+Dónde lo apliqué:
+- sistemas administrativos
+- proyectos fullstack conectados a APIs propias
+- interfaces con manejo de datos y roles
+
+Mi enfoque:
+Me gusta Vue por su claridad, su orden y la velocidad con la que permite construir interfaces sólidas.
 `
-          }
-        ]
-      },
-      {
-        name: "web_basics",
-        children: [
-          {
-            name: "javascript.txt",
-            content: `
-JavaScript fue una de mis bases principales para desarrollo web.
+        }
+      ]
+    },
+    {
+      name: "web_basics",
+      children: [
+        {
+          name: "javascript.txt",
+          content: `
+JavaScript fue una de mis bases principales en desarrollo web.
 
-Lo usé en:
-• frontend interactivo
+Es una tecnología con la que trabajé tanto en frontend como en proyectos fullstack.
+
+Qué hago con JavaScript:
 • lógica del navegador
+• interacción en interfaces
 • conexión con APIs
+• comportamiento dinámico en páginas
 • herramientas web
 • aplicaciones fullstack
-`
-          },
-          {
-            name: "html_css.txt",
-            content: `
-HTML y CSS son parte esencial de mi trabajo en web.
 
-Experiencia:
+Mi enfoque:
+JavaScript fue una base importante para entender cómo construir experiencias web reales,
+más allá de lo visual.
+`
+        },
+        {
+          name: "html_css.txt",
+          content: `
+HTML y CSS son una parte central de mi trabajo en frontend.
+
+No los veo como algo básico o secundario:
+para mí son clave en la identidad visual y la calidad de una interfaz.
+
+Qué trabajo con HTML y CSS:
 • layouts responsivos
 • landing pages
 • secciones personalizadas
 • componentes visuales
 • portfolios
-• interfaces oscuras / modernas
-• efectos y animaciones
+• interfaces oscuras y modernas
+• efectos, detalles visuales y animaciones
 
-Me interesa mucho que una interfaz tenga identidad visual.
+Mi enfoque:
+Me interesa que una interfaz no solo funcione bien,
+sino que también tenga presencia, estilo e identidad propia.
 `
-          }
-        ]
-      }
-    ]
-  },
+        }
+      ]
+    }
+  ]
+},
 
   {
     name: "devops",
@@ -557,7 +620,56 @@ Busco que las estructuras:
       }
     ]
   },
+{
+  name: "testing",
+  children: [
+    {
+      name: "unit_testing.txt",
+      content: `
+Trabajo con testing para validar comportamiento y asegurar calidad.
 
+Qué hago:
+• tests unitarios
+• validación de lógica de negocio
+• cobertura básica
+• pruebas de endpoints
+
+Lo aplico en:
+- APIs backend
+- servicios críticos
+`
+    }
+  ]
+}
+,
+{
+  name: "system_design",
+  children: [
+    {
+      name: "design.txt",
+      content: `
+Me interesa diseñar sistemas completos, no solo escribir código.
+
+Qué trabajo:
+• separación por dominios
+• diseño de APIs
+• escalabilidad
+• comunicación entre servicios
+• organización de arquitectura
+
+Dónde lo aplico:
+- sistemas backend
+- microservicios
+- plataformas como Valdoria
+
+Mi enfoque:
+Pensar primero el sistema,
+y después implementarlo de forma clara y mantenible.
+`
+    }
+  ]
+}
+,
   {
     name: "gamedev",
     children: [
@@ -628,6 +740,7 @@ Lo usé para:
           }
         ]
       },
+
       {
         name: "game_projects",
         children: [
@@ -733,7 +846,30 @@ Lo utilicé para:
 • presentaciones
 • elementos de UI
 `
-          }
+          },
+      {
+        name: "fl_studio.flp",
+        content: `
+      FL Studio forma parte de mi perfil creativo dentro del desarrollo de videojuegos.
+
+      Lo utilizo para:
+      • diseño de sonido
+      • creación de música
+      • ambientación sonora
+      • efectos (SFX)
+      • loops y pistas
+
+      Dónde lo aplico:
+      - proyectos de videojuegos (Valdoria / Roomverse)
+      - prototipos interactivos
+      - experiencias con identidad propia
+
+      Mi enfoque:
+      El sonido no es un detalle.
+      Es parte de la experiencia del sistema.
+      Busco que cada interacción tenga feedback auditivo y atmósfera.
+      `
+      }
         ]
       }
     ]

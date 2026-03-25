@@ -106,13 +106,11 @@ const onTouchEnd = (e: TouchEvent) => {
 
               <div className="card-content">
                 <div className="card-top">
-                  <span className="project-status">READY</span>
-                  <span className="card-index">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
+                  <span className="project-status"> </span>
+                  <h3 className="project-title"> {project.title}</h3>
                 </div>
 
-                <h3 className="project-title">{project.title}</h3>
+
 
                 <p className="project-desc">{project.description}</p>
 
@@ -123,6 +121,16 @@ const onTouchEnd = (e: TouchEvent) => {
                     </span>
                   ))}
                 </div>
+                  {project.url && (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="view-more-btn"
+                    >
+                      Ver más →
+                    </a>
+                  )}
               </div>
             </article>
           ))}

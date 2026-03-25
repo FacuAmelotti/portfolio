@@ -776,11 +776,11 @@
   .experience-shell {
     display: flex;
     align-items: flex-start;
-       margin-top: -120px;
+       margin-top: -65px;
   }
 
   .experience-terminal {
-    height: 86vh;
-    min-height: 86vh;
+    height: 92vh;
+    min-height: 92vh;
   }
 }

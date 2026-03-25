@@ -29,13 +29,13 @@ export default function Contact() {
               <div className="contact-profile-row">
                   <div className="contact-avatar">
                     <img
-                      src="./assets/images/facu.png"
+                      src="./facu.png"
                       alt="Facundo Amelotti"
                       onError={(e) => {
                         e.currentTarget.style.display = "none"
                       }}
                     />
-                    <span className="contact-avatar-fallback">FA</span>
+
                   </div>
                 <div className="contact-profile-meta">
                   <div className="contact-profile-name">Facundo Amelotti</div>

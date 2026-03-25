@@ -11,10 +11,35 @@ type SymbolColumn = {
   length: number
 }
 
+type TargetDirection =
+  | "top-down"
+  | "left-right"
+  | "right-left"
+  | "diag-left-down"
+  | "diag-right-down"
+
+type FloatingTarget = {
+  id: number
+  x: number
+  y: number
+  vx: number
+  vy: number
+  size: number
+  bornAt: number
+  ttl: number
+  icon: string
+  rotation: number
+  rotationSpeed: number
+  points: number
+  direction: TargetDirection
+}
+
 const FULL = "Facundo\nAmelotti"
 
 const GLYPHS =
   "01<>[]{}()/\\|+-=_#@$%&!?~^アイウエオカキクケコサシスセソナニヌネノΞΣΔΛΩЖЯ"
+
+const TARGET_ICONS = ["🐛", "🦠"]
 
 function randomGlyph() {
   return GLYPHS[Math.floor(Math.random() * GLYPHS.length)]
@@ -53,8 +78,8 @@ function useSymbolColumns(count = 10) {
       id: i,
       left,
       delay: Math.random() * -8,
-      duration: 3.2 + Math.random() * 3.2, // más rápido
-      size: 15 + Math.random() * 4, // más ancho/grande
+      duration: 3.2 + Math.random() * 3.2,
+      size: 15 + Math.random() * 4,
       opacity: 0.12 + Math.random() * 0.16,
       length: 18 + Math.floor(Math.random() * 14),
     }))
@@ -294,6 +319,88 @@ function useTypewriter(active: boolean) {
   return { displayed, done }
 }
 
+function getRandomTargetIcon() {
+  return TARGET_ICONS[Math.floor(Math.random() * TARGET_ICONS.length)]
+}
+
+function createFloatingTarget(id: number, width: number, height: number): FloatingTarget {
+  const directions: TargetDirection[] = [
+    "top-down",
+    "left-right",
+    "right-left",
+    "diag-left-down",
+    "diag-right-down",
+  ]
+
+  const direction = directions[Math.floor(Math.random() * directions.length)]
+  const size = 24 + Math.random() * 26
+  const ttl = 2600 + Math.random() * 2600
+
+  let x = 0
+  let y = 0
+  let vx = 0
+  let vy = 0
+
+  if (direction === "top-down") {
+    x = 8 + Math.random() * (width - 16)
+    y = -size - 20
+    vx = (Math.random() - 0.5) * 0.45
+    vy = 1.3 + Math.random() * 2.6
+  }
+
+  if (direction === "left-right") {
+    x = -size - 20
+    y = 80 + Math.random() * Math.max(120, height - 180)
+    vx = 1.5 + Math.random() * 2.8
+    vy = (Math.random() - 0.5) * 0.4
+  }
+
+  if (direction === "right-left") {
+    x = width + size + 20
+    y = 80 + Math.random() * Math.max(120, height - 180)
+    vx = -(1.5 + Math.random() * 2.8)
+    vy = (Math.random() - 0.5) * 0.4
+  }
+
+  if (direction === "diag-left-down") {
+    x = -size - 20
+    y = -size - 20
+    vx = 1.4 + Math.random() * 2.2
+    vy = 1.1 + Math.random() * 2
+  }
+
+  if (direction === "diag-right-down") {
+    x = width + size + 20
+    y = -size - 20
+    vx = -(1.4 + Math.random() * 2.2)
+    vy = 1.1 + Math.random() * 2
+  }
+
+  const speed = Math.hypot(vx, vy)
+  const speedScore = Math.round(speed * 12)
+  const ttlScore = Math.round((5200 - ttl) / 180)
+  const directionScore =
+    direction === "diag-left-down" || direction === "diag-right-down" ? 14 : 6
+
+  const points = Math.max(8, speedScore + ttlScore + directionScore)
+
+  return {
+    id,
+    x,
+    y,
+    vx,
+    vy,
+    size,
+    bornAt: performance.now(),
+    ttl,
+    icon: getRandomTargetIcon(),
+    rotation: Math.random() * 360,
+    rotationSpeed: (Math.random() - 0.5) * 2.8,
+    points,
+    direction,
+  }
+}
+
 export default function Hero({ active }: { active: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -306,6 +413,12 @@ export default function Hero({ active }: { active: boolean }) {
 
   const [reveal, setReveal] = useState(false)
   const [isClicking, setIsClicking] = useState(false)
+
+  const [score, setScore] = useState(0)
+  const [targets, setTargets] = useState<FloatingTarget[]>([])
+  const nextTargetIdRef = useRef(1)
+  const animationFrameRef = useRef<number | null>(null)
+  const spawnTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (done) {
@@ -332,6 +445,72 @@ export default function Hero({ active }: { active: boolean }) {
     raf = requestAnimationFrame(animateIdle)
     return () => cancelAnimationFrame(raf)
   }, [])
+
+  useEffect(() => {
+    if (!active) {
+      setTargets([])
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+      if (spawnTimeoutRef.current) window.clearTimeout(spawnTimeoutRef.current)
+      return
+    }
+
+    const animateTargets = () => {
+      const now = performance.now()
+      const root = rootRef.current
+      const rect = root?.getBoundingClientRect()
+
+      setTargets((prev) =>
+        prev
+          .map((target) => ({
+            ...target,
+            x: target.x + target.vx,
+            y: target.y + target.vy,
+            rotation: target.rotation + target.rotationSpeed,
+          }))
+          .filter((target) => {
+            const expired = now - target.bornAt > target.ttl
+            if (expired) return false
+
+            if (!rect) return true
+
+            const outLeft = target.x < -target.size * 2 - 40
+            const outRight = target.x > rect.width + target.size * 2 + 40
+            const outTop = target.y < -target.size * 2 - 40
+            const outBottom = target.y > rect.height + target.size * 2 + 40
+
+            return !(outLeft || outRight || outTop || outBottom)
+          })
+      )
+
+      animationFrameRef.current = requestAnimationFrame(animateTargets)
+    }
+
+    const scheduleSpawn = () => {
+      const root = rootRef.current
+      const rect = root?.getBoundingClientRect()
+
+      if (rect) {
+        setTargets((prev) => {
+          if (prev.length >= 4) return prev
+          return [
+            ...prev,
+            createFloatingTarget(nextTargetIdRef.current++, rect.width, rect.height),
+          ]
+        })
+      }
+
+      const nextDelay = 900 + Math.random() * 1800
+      spawnTimeoutRef.current = window.setTimeout(scheduleSpawn, nextDelay)
+    }
+
+    animationFrameRef.current = requestAnimationFrame(animateTargets)
+    spawnTimeoutRef.current = window.setTimeout(scheduleSpawn, 1400)
+
+    return () => {
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+      if (spawnTimeoutRef.current) window.clearTimeout(spawnTimeoutRef.current)
+    }
+  }, [active])
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const root = rootRef.current
@@ -368,6 +547,30 @@ export default function Hero({ active }: { active: boolean }) {
     window.setTimeout(() => setIsClicking(false), 150)
   }
 
+  const handleTargetHit = (target: FloatingTarget, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+
+    const root = rootRef.current
+    if (!root) return
+
+    const rect = root.getBoundingClientRect()
+    const cx = rect.left + target.x + target.size / 2
+    const cy = rect.top + target.y + target.size / 2
+
+    triggerBurst(cx, cy)
+    window.setTimeout(() => triggerBurst(cx + 10, cy - 6), 40)
+    window.setTimeout(() => triggerBurst(cx - 8, cy + 8), 70)
+
+    root.style.setProperty("--click-x", `${target.x + target.size / 2}px`)
+    root.style.setProperty("--click-y", `${target.y + target.size / 2}px`)
+
+    setIsClicking(true)
+    window.setTimeout(() => setIsClicking(false), 150)
+
+    setScore((prev) => prev + target.points)
+    setTargets((prev) => prev.filter((item) => item.id !== target.id))
+  }
+
   const lines = displayed.split("\n")
   const firstLine = lines[0] ?? ""
   const secondLine = lines[1] ?? ""
@@ -384,6 +587,46 @@ export default function Hero({ active }: { active: boolean }) {
       <div className="hero-bg-grid" />
       <div className="hero-bg-glow" />
       <div className="hero-bg-noise" />
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "clamp(52px, 12vw, 72px)",
+          right: "clamp(22px, 2.5vw, 42px)",
+          zIndex: 6,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "10px 14px",
+          minHeight: "44px",
+          border: "1px solid rgba(0,255,65,0.22)",
+          background:
+            "linear-gradient(180deg, rgba(0,255,65,0.045), rgba(0,255,65,0.015))",
+          boxShadow:
+            "inset 0 0 0 1px rgba(255,255,255,0.012), 0 0 20px rgba(0,255,65,0.06)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          fontFamily: '"Share Tech Mono", monospace',
+          textTransform: "uppercase",
+          letterSpacing: "0.12em",
+          fontSize: "0.78rem",
+          color: "rgba(220,255,232,0.78)",
+          pointerEvents: "none",
+        }}
+      >
+        <span style={{ color: "rgba(0,255,65,0.56)" }}>Puntos:</span>
+        <span
+          style={{
+            color: "#e8fff0",
+            textShadow: "0 0 10px rgba(0,255,65,0.25)",
+            minWidth: "3ch",
+            textAlign: "right",
+          }}
+        >
+          {score}
+        </span>
+      </div>
 
       <div className="hero-symbols-layer" aria-hidden="true">
         {symbolColumns.map((col, index) => (
@@ -406,6 +649,49 @@ export default function Hero({ active }: { active: boolean }) {
       </div>
 
       <canvas ref={canvasRef} className="hero-canvas" />
+
+      {targets.map((target) => (
+        <button
+          key={target.id}
+          type="button"
+          aria-label={`Objetivo ${target.points} puntos`}
+          onMouseDown={(e) => handleTargetHit(target, e)}
+          style={{
+            position: "absolute",
+            left: target.x,
+            top: target.y,
+            width: target.size,
+            height: target.size,
+            display: "grid",
+            placeItems: "center",
+            zIndex: 5,
+            border: "1px solid rgba(0,255,65,0.2)",
+            borderRadius: "999px",
+            background:
+              "radial-gradient(circle, rgba(0,255,65,0.14) 0%, rgba(0,255,65,0.045) 55%, rgba(0,0,0,0.16) 100%)",
+            boxShadow:
+              "0 0 16px rgba(0,255,65,0.16), inset 0 0 16px rgba(0,255,65,0.08)",
+            color: "#eafff1",
+            cursor: "crosshair",
+            userSelect: "none",
+            transform: `translate3d(0,0,0) rotate(${target.rotation}deg)`,
+            fontSize: target.size * 0.62,
+            lineHeight: 1,
+            padding: 0,
+            outline: "none",
+            transition: "transform 0.08s ease, box-shadow 0.12s ease",
+          }}
+        >
+          <span
+            style={{
+              filter: "drop-shadow(0 0 10px rgba(0,255,65,0.3))",
+              pointerEvents: "none",
+            }}
+          >
+            {target.icon}
+          </span>
+        </button>
+      ))}
 
       <div className="hero-orb hero-orb-1" />
       <div className="hero-orb hero-orb-2" />
@@ -433,15 +719,14 @@ export default function Hero({ active }: { active: boolean }) {
             )}
           </h1>
 
-
           <p className={`hero-role hero-reveal hero-reveal-1 ${reveal ? "visible" : ""}`}>
-             &gt; Software Developer
+            &gt; Software Developer
           </p>
 
-<p className={`hero-desc hero-reveal hero-reveal-2 ${reveal ? "visible" : ""}`}>
-  Software developer enfocado en backend, arquitectura de sistemas y plataformas escalables.
-</p>
-
+          <p className={`hero-desc hero-reveal hero-reveal-2 ${reveal ? "visible" : ""}`}>
+            Software developer enfocado en backend, arquitectura de sistemas y plataformas
+            escalables.
+          </p>
         </div>
       </div>
     </div>

@@ -155,8 +155,8 @@
 .nav-arrows {
   position: fixed;
   bottom: 1.6rem;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 2rem;
+  transform: none;
   z-index: 200;
   display: flex;
   gap: 0.9rem;
@@ -901,6 +901,10 @@
   .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
   .social-links { flex-direction: row; flex-wrap: wrap; }
   .social-link { flex: 1; min-width: 140px; }
+    .nav-arrows {
+      left: 50%;
+      transform: translateX(-50%);
+    }
 }
 
 @media (max-width: 640px) {
@@ -911,6 +915,12 @@
   .about-stats { grid-template-columns: 1fr 1fr; }
   .dot-nav { display: none; }
   .section-counter { right: 1rem; }
+
+    .nav-arrows {
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 12px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1037,3 +1047,4 @@
   20% { opacity: 1; }
   100% { opacity: 0; }
 }
+

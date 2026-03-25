@@ -9,37 +9,29 @@ const projects = [
     title: "Roomverse",
     description:
       "Simulación de mundo interactivo con mapas, entidades y progresión modular desarrollada en Unity.",
-    tech: ["Unity", "C#"]
+    tech: ["Unity", "C#"],
+    url: "https://roomverse-game.netlify.app/"
   },
   {
     title: "Colegio de Ingenieros",
     description:
       "Sistema de gestión para ingenieros y empresas con autenticación, bolsa laboral y modelo de datos híbrido.",
-    tech: ["Vue.js", "Node.js", "MySQL", "MongoDB", "Docker"]
-  },
-  {
-    title: "GitLab Script Generator",
-    description:
-      "Herramienta web para generar scripts de configuración de permisos y ramas protegidas en GitLab.",
-    tech: ["HTML", "CSS", "JavaScript", "GitLab"]
+    tech: ["Vue.js", "Node.js", "MySQL", "MongoDB", "Docker"],
+    url: "https://github.com/FacuAmelotti/Colegio-Ingenieros"
   },
   {
     title: "Space Survival",
     description:
       "Prototipo de videojuego survival desarrollado en Unity y publicado en itch.io.",
-    tech: ["Unity", "C#", "HTML5"]
+    tech: ["Unity", "C#", "HTML5"],
+    url: "https://techf-studios.itch.io/space-survival"
   },
   {
     title: "ChatBot Assistant",
     description:
       "Asistente conversacional de escritorio con motor de diálogo basado en RiveScript.",
-    tech: ["Python", "RiveScript", "HTML"]
-  },
-  {
-    title: "Hornerito",
-    description:
-      "Aplicación utilitaria desarrollada como proyecto independiente en Java.",
-    tech: ["Java", "Desktop App"]
+    tech: ["Python", "RiveScript", "HTML"],
+    url: "https://github.com/FacuAmelotti/ChatBot_Assistant"
   }
 ]
 

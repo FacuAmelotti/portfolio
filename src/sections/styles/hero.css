@@ -551,6 +551,11 @@ letter-spacing: -0.03em !important;
   .hero-symbol-column {
     font-size: 10px !important;
   }
+
+  .progress-bar.progress-hero {
+    display: none;
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -595,4 +600,5 @@ font-weight: 700 !important;
 letter-spacing: -0.02em;
 text-transform: uppercase;
 }
+
 

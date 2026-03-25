@@ -191,6 +191,7 @@
 }
 
 .project-status {
+   padding-right: 5px;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -354,7 +355,7 @@
   .cards-container {
       grid-template-columns: 1fr;
       gap: 0.8rem;
-      max-height: 72vh;
+      max-height: 78vh;
     }
 
     .project-card {
@@ -383,3 +384,21 @@
 
 }
 
+
+.view-more-btn {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9ae6b4;
+  border: 1px solid rgba(154, 230, 180, 0.4);
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.view-more-btn:hover {
+  background: rgba(154, 230, 180, 0.1);
+  transform: translateY(-1px);
+  color: rgba(23, 230, 32, 1);
+}
